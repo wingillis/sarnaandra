@@ -1,0 +1,16 @@
+Experiments
+    date_begin
+    date_end
+    data_type
+    files
+    name
+
+Files
+    date_added
+    date_modified
+    data_type
+    filesize
+    name
+    experiment
+    tags
+    additional_files
