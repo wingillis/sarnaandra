@@ -10,10 +10,13 @@
 {% endfor %}
 </div>
 <div class="row">
-    <form action="/add_experiment" method="post">
-        <input type="text" name="expname"><br>
-        <input type="text" name="dtype"><br>
-        <input id="submit" type="submit">
-    </form>
+    <div class="large-3 medium-3 columns">
+        <h4>Add new epxeriment</h4>
+        <form action="/add_experiment" method="post">
+            <input type="text" name="expname" placeholder="Experiment">
+            <input type="text" name="dtype" placeholder="Data type">
+            <input id="submit" type="submit" value="Add" class="button medium-12 large-12 radius">
+        </form>
+        </div>
 </div>
 {% endblock %}

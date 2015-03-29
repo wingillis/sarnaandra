@@ -22,9 +22,11 @@
                 <li>
                     <label>Data Tunes</label>
                 </li>
-                <li><a href="#">Experiments</a></li>
+                <li><a href="/">Experiments</a></li>
                 <li><a href="#">Last Experiment</a></li>
                 <li><a href="#">Close database connection</a></li>
+                <li><label>General</label></li>
+                <li><a href="#">Recurring scripts</a> </li>
                 <li>
                     <label>Account</label>
                 </li>
@@ -33,13 +35,13 @@
         </aside>
         <section class="main-section">
             <div class="row">
-                <div class="medium-12 columns" id="app-title">
+                <div class="medium-12 columns app-title">
                     <h2>Data Tunes</h2>
-                    <br>
                     <p>You have {{freespace}}GB free out of {{totalspace}}GB ({{percentage}}%) in hard drive: {{drive}}</p>
-                    <div class="progress large-10 radius success">
-                        <span class="meter" style="width: {{100 - percentage}}%"></span>
+                    <div class="progress large-12 radius success center">
+                        <span class="meter app-title" style="width: {{100 - percentage}}%"></span>
                     </div>
+
                 </div>
             </div>
             {% block body %}
