@@ -35,6 +35,12 @@
             <div class="row">
                 <div class="medium-12 columns" id="app-title">
                     <h2>Data Tunes</h2>
+                    <br>
+                    <p>You have {{freespace}} free out of {{totalspace}} ({{percentage}}%)</p>
+                    <br>
+                    <div class="progress large-12 radius secondary">
+                        <span class="meter" style="width: {{percentage}}%"></span>
+                    </div>
                 </div>
             </div>
             {% block body %}

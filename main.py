@@ -1,5 +1,11 @@
 from flask import Flask, request, url_for, render_template,redirect
 import data_database as db
+import platform
+
+if platform.system() == 'Windows':
+    default_drive_path = 'C:\\'
+else:
+    default_drive_path = '~'
 
 # create an instance of the app
 app = Flask(__name__)
