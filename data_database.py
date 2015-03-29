@@ -4,13 +4,16 @@ __author__ = 'wgillis'
 # to something else in the future like sqlalchemy or psychopg2
 import sqlite3
 import helpers
+import os
 
 class Database(object):
     # class that contains all information about how to interpret the data
     # stored in the database
     def __init__(self):
         self.started = True
+        # I did this because it wasn't working for some reason
         self.connection = sqlite3.connect('dataTunes.db', check_same_thread=False)
+        self.closed = False
 
     def add_experiment(self, experiment_name, data_type):
         c = self.get_cursor()
@@ -32,4 +35,16 @@ class Database(object):
 
     def close(self):
         self.connection.close()
+        self.closed = True
         return 0
+
+    def add_experiment_file(self, fullfile, experiment, data_type):
+        c = self.get_cursor()
+        date = helpers.get_date()
+        filesize = helpers.get_file_size()
+        c.execute('insert into files values (?,?,?,?,?,?,?,?)',
+                  (date, date, data_type, filesize, fullfile, experiment, '', ''))
+
+        self.save()
+        return 0
+

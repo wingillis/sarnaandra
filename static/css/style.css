@@ -1,3 +1,7 @@
 .app-title {
     text-align: center;
 }
+
+#diskSpace{
+	background: #ddd;
+}

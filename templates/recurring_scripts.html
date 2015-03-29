@@ -1,6 +1,16 @@
 {% extends "index.html" %}
 {% block body %}
 <div class="row">
+	<div class="large-12 medium-12 small-12 columns">
+		<form>
+            <input type="text" name="filepath">
+            <input type="datetime" name="repeatTime" autocomplete="on">
+            <!--<span class="postfix">hrs</span>-->
+            <input type="submit" value="Add script">
+        </form>
+	</div>
+</div>
+<div class="row">
     {% for script in scripts %}
     <div class="large-4 medium-4 columns">
         <p>Name: {{script.name}}</p>
