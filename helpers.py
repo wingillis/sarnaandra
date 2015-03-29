@@ -40,3 +40,8 @@ def get_free_disk_space(path):
             return mainDisk.get_space()
     else:
         return mainDisk.get_space()
+
+def hour2seconds(hour):
+    '''converts the given hour variable to seconds'''
+    seconds = hour * 60 * 60
+    return seconds

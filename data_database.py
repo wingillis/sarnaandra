@@ -48,3 +48,16 @@ class Database(object):
         self.save()
         return 0
 
+    def add_experiment_files(self):
+        '''Given a list of dictionaries with fields the files
+                table, this function adds all of them to the database'''
+        pass
+
+    def add_recurring_script(self, fullfile, type, interval):
+        '''Adds an entry for a recurring script.
+        Interval is in hours.'''
+        seconds_interval = helpers.hour2seconds(interval)
+        c = self.get_cursor()
+        c.execute('''insert into recurring_files values (?,?,?)''', (fullfile, type, seconds_interval))
+        self.save()
+        return 0

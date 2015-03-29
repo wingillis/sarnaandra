@@ -14,3 +14,9 @@ Files
     experiment
     tags
     additional_files
+
+recurring_files
+    id Primary key
+    filename
+    script_type
+    time_interval # in seconds
