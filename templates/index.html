@@ -36,10 +36,9 @@
                 <div class="medium-12 columns" id="app-title">
                     <h2>Data Tunes</h2>
                     <br>
-                    <p>You have {{freespace}} free out of {{totalspace}} ({{percentage}}%)</p>
-                    <br>
-                    <div class="progress large-12 radius secondary">
-                        <span class="meter" style="width: {{percentage}}%"></span>
+                    <p>You have {{freespace}}GB free out of {{totalspace}}GB ({{percentage}}%) in hard drive: {{drive}}</p>
+                    <div class="progress large-10 radius success">
+                        <span class="meter" style="width: {{100 - percentage}}%"></span>
                     </div>
                 </div>
             </div>

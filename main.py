@@ -1,6 +1,7 @@
 from flask import Flask, request, url_for, render_template,redirect
 import data_database as db
 import platform
+import helpers
 
 if platform.system() == 'Windows':
     default_drive_path = 'C:\\'
@@ -17,7 +18,8 @@ base = db.Database()
 @app.route("/")
 def main():
     exps = base.get_all_experiments()
-    return render_template('exp_lists.html', experiments=exps)
+    (space, total) = helpers.get_free_disk_space(default_drive_path)
+    return render_template('exp_lists.html', experiments=exps, freespace=round(space, 2), totalspace=round(total, 2), percentage=round(space/total*100, 2), drive=default_drive_path)
 
 @app.route("/add_experiment", methods=['post', 'get'])
 def add_exp():
