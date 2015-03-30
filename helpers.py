@@ -66,3 +66,6 @@ def format_scripts(script_list):
 
 def file_exists(path):
     return os.path.isfile(path)
+
+def get_dirs_in_path(path):
+    return list(filter(os.path.isdir, os.listdir(path)))

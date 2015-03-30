@@ -1,4 +1,4 @@
-from flask import Flask, request, url_for, render_template,redirect
+from flask import Flask, request, url_for, render_template,redirect, jsonify
 import data_database as db
 import platform
 import helpers
@@ -39,12 +39,13 @@ def add_exp():
 @app.route('/recurring_scripts', methods=['post', 'get'])
 def recurring_scripts():
     if request.method == 'POST':
+        seconds_interval = helpers.hour2seconds(request.form['interval'])
         kwargs = {'fullfile': request.form['filepath'],
                   'type': request.form['type'],
-                  'interval': request.form['interval']}
+                  'interval': seconds_interval}
         if helpers.file_exists(kwargs['fullfile']):
-            base.add_recurring_script(**kwargs)
-
+            base.add_recurring_script(**kwargs) # to database
+            backend.add_recurring_task(kwargs['fullfile'], kwargs['interval'])
         else:
             # alert user that file doesn't exist
             pass
@@ -57,6 +58,14 @@ def recurring_scripts():
         else:
             kwargs = {'scripts':None, 'main': False}
             return render_template('recurring_scripts.html', **kwargs)
+
+@app.route('/filepath')
+def get_next_dirs():
+    # assumes path is located in
+    path = request.get_json()['path']
+    dir_list = helpers.get_dirs_in_path(path)
+    paths = {'paths': dir_list}
+    return jsonify(**paths)
 
 
 if __name__=="__main__":

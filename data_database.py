@@ -57,9 +57,8 @@ class Database(object):
     def add_recurring_script(self, fullfile, type, interval):
         '''Adds an entry for a recurring script.
         Interval is in hours.'''
-        seconds_interval = helpers.hour2seconds(interval)
         c = self.get_cursor()
-        c.execute('''insert into recurring_files values (?,?,?)''', (fullfile, type, seconds_interval))
+        c.execute('''insert into recurring_files values (?,?,?)''', (fullfile, type, interval))
         self.save()
         return 0
 
