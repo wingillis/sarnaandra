@@ -4,13 +4,7 @@
     <option name="SCOPE_TYPE" value="3" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9b679c71-726b-4086-9dee-792fd103b0ec" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/backend.py" afterPath="$PROJECT_DIR$/backend.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data_database.py" afterPath="$PROJECT_DIR$/data_database.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/helpers.py" afterPath="$PROJECT_DIR$/helpers.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.py" afterPath="$PROJECT_DIR$/main.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="9b679c71-726b-4086-9dee-792fd103b0ec" name="Default" comment="" />
     <ignored path="dataTunesServer.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -38,7 +32,7 @@
           <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/main.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.45070422" vertical-offset="1352" max-vertical-offset="1992">
+                <state vertical-scroll-proportion="0.8536155" vertical-offset="1124" max-vertical-offset="1992">
                   <caret line="67" column="26" selection-start-line="67" selection-start-column="26" selection-end-line="67" selection-end-column="26" />
                   <folding>
                     <element signature="e#0#76#0" expanded="true" />
@@ -72,16 +66,11 @@
           <file leaf-file-name="helpers.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/helpers.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0" vertical-offset="224" max-vertical-offset="864">
+                <state vertical-scroll-proportion="0.0" vertical-offset="896" max-vertical-offset="1536">
                   <caret line="70" column="56" selection-start-line="70" selection-start-column="56" selection-end-line="70" selection-end-column="56" />
                   <folding>
                     <element signature="e#24#39#0" expanded="true" />
                     <element signature="e#121#468#0" expanded="false" />
-                    <element signature="e#506#738#0" expanded="false" />
-                    <element signature="e#863#1566#0" expanded="false" />
-                    <element signature="e#1597#1694#0" expanded="false" />
-                    <element signature="e#1734#1931#0" expanded="false" />
-                    <element signature="e#1960#1987#0" expanded="false" />
                   </folding>
                 </state>
               </provider>
@@ -138,8 +127,8 @@
           <file leaf-file-name="style.css" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/static/css/style.css">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.3717728" vertical-offset="0" max-vertical-offset="581">
-                  <caret line="9" column="19" selection-start-line="9" selection-start-column="19" selection-end-line="9" selection-end-column="19" />
+                <state vertical-scroll-proportion="0.37241378" vertical-offset="0" max-vertical-offset="580">
+                  <caret line="9" column="1" selection-start-line="9" selection-start-column="1" selection-end-line="9" selection-end-column="1" />
                   <folding />
                 </state>
               </provider>
@@ -150,6 +139,11 @@
     </splitter>
   </component>
   <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="wingillis" />
+      </list>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
@@ -475,20 +469,26 @@
       <option name="project" value="LOCAL" />
       <updated>1427716776374</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Added path recognition">
+      <created>1427720898979</created>
+      <option name="number" value="00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1427720898979</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="1911" y="-9" width="1938" height="1064" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32822758" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32822758" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32932165" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21115974" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32919255" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.11820581" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -546,7 +546,8 @@
     <MESSAGE value="Ability to add files to an experiment now" />
     <MESSAGE value="Ability to add files to recurring script" />
     <MESSAGE value="Beginning to implement running scripts recurringly" />
-    <option name="LAST_COMMIT_MESSAGE" value="Beginning to implement running scripts recurringly" />
+    <MESSAGE value="Added path recognition" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added path recognition" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -588,11 +589,6 @@
           <folding>
             <element signature="e#24#39#0" expanded="true" />
             <element signature="e#121#468#0" expanded="false" />
-            <element signature="e#506#738#0" expanded="false" />
-            <element signature="e#863#1566#0" expanded="false" />
-            <element signature="e#1597#1694#0" expanded="false" />
-            <element signature="e#1734#1931#0" expanded="false" />
-            <element signature="e#1960#1987#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -660,11 +656,6 @@
           <folding>
             <element signature="e#24#39#0" expanded="true" />
             <element signature="e#121#468#0" expanded="false" />
-            <element signature="e#506#738#0" expanded="false" />
-            <element signature="e#863#1566#0" expanded="false" />
-            <element signature="e#1597#1694#0" expanded="false" />
-            <element signature="e#1734#1931#0" expanded="false" />
-            <element signature="e#1960#1987#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -752,8 +743,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/static/css/style.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3717728" vertical-offset="0" max-vertical-offset="581">
-          <caret line="9" column="19" selection-start-line="9" selection-start-column="19" selection-end-line="9" selection-end-column="19" />
+        <state vertical-scroll-proportion="0.37241378" vertical-offset="0" max-vertical-offset="580">
+          <caret line="9" column="1" selection-start-line="9" selection-start-column="1" selection-end-line="9" selection-end-column="1" />
           <folding />
         </state>
       </provider>
@@ -793,18 +784,13 @@
           <folding>
             <element signature="e#24#39#0" expanded="true" />
             <element signature="e#121#468#0" expanded="false" />
-            <element signature="e#506#738#0" expanded="false" />
-            <element signature="e#863#1566#0" expanded="false" />
-            <element signature="e#1597#1694#0" expanded="false" />
-            <element signature="e#1734#1931#0" expanded="false" />
-            <element signature="e#1960#1987#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.45070422" vertical-offset="1352" max-vertical-offset="1992">
+        <state vertical-scroll-proportion="0.8536155" vertical-offset="1124" max-vertical-offset="1992">
           <caret line="67" column="26" selection-start-line="67" selection-start-column="26" selection-end-line="67" selection-end-column="26" />
           <folding>
             <element signature="e#0#76#0" expanded="true" />
