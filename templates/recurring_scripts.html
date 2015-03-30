@@ -3,13 +3,15 @@
 <div class="row">
 	<div class="large-12 medium-12 small-12 columns">
 		<form>
-            <input type="text" name="filepath">
-            <input type="number" name="repeatTime" autocomplete="on">
+            <input type="text" name="filepath" placeholder="Path of script (with name)">
+            <input type="text" name="type" placeholder="File type">
+            <input type="number" name="interval" autocomplete="on" placeholder="interval (in hours)">
             <!--<span class="postfix">hrs</span>-->
-            <input type="submit" value="Add script">
+            <input type="submit" class="button medium-12 large-12 radius" value="Add script">
         </form>
 	</div>
 </div>
+{% if scripts %}
 <div class="row">
     {% for script in scripts %}
     <div class="large-4 medium-4 columns">
@@ -19,4 +21,5 @@
     </div>
     {% endfor %}
 </div>
+{% endif %}
 {% endblock %}

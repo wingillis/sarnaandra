@@ -14,13 +14,13 @@
         <nav class="tab-bar">
             <section class="left-small"><a class="left-off-canvas-toggle menu-icon"><span></span></a></section>
             <section class="middle tab-bar-section">
-                <h1 class="title">Data Tunes</h1>
+                <h1 class="title">Data Manager</h1>
             </section>
         </nav>
         <aside class="left-off-canvas-menu">
             <ul class="off-canvas-list">
                 <li>
-                    <label>Data Tunes</label>
+                    <label>Data Manager</label>
                 </li>
                 <li><a href="/">Experiments</a></li>
                 <li><a href="#">Last Experiment</a></li>
@@ -36,12 +36,15 @@
         <section class="main-section">
             <div class="row">
                 <div class="medium-12 columns app-title">
-                    <h2>Data Tunes</h2>
-                    <p>You have {{freespace}}GB free out of {{totalspace}}GB ({{percentage}}%) in hard drive: {{drive}}</p>
+                    <h2>Data Manager</h2>
+                    {% if main %}
+                    <br>
+                    <span id="diskSpaceSpan">You have {{freespace}}GB free out of {{totalspace}}GB ({{percentage}}%) in hard drive: {{drive}}</span>
+                    <a href="#" class="button">Pick Drive</a>
                     <div class="progress large-12 radius success center" id="diskSpace">
                         <span class="meter app-title" style="width: {{100 - percentage}}%"></span>
                     </div>
-
+                    {% endif %}
                 </div>
             </div>
             {% block body %}

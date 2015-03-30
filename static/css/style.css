@@ -5,3 +5,7 @@
 #diskSpace{
 	background: #ddd;
 }
+
+#diskSpaceSpan {
+    margin-right: 8px;
+}

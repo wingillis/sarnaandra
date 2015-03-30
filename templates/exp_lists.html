@@ -1,6 +1,22 @@
 {% extends "index.html" %}
 {% block body %}
 <div class="row">
+    <div class="large-3 medium-3 columns">
+        <span>.</span>
+    </div>
+    <div class="large-6 medium-6 columns">
+        <h4>Add new experiment</h4>
+        <form action="/add_experiment" method="post">
+            <input type="text" name="expname" placeholder="Experiment">
+            <input type="text" name="dtype" placeholder="Data type">
+            <input id="submit" type="submit" value="Add" class="button medium-12 large-12 radius">
+        </form>
+    </div>
+    <div class="large-3 medium-3 columns">
+        <span></span>
+    </div>
+</div>
+<div class="row">
 {% for item in experiments %}
     <div class="large-3 medium-3 small-3 columns">
         <p>{{item[4]}}</p>
@@ -9,14 +25,5 @@
     </div>
 {% endfor %}
 </div>
-<div class="row">
-    <div class="large-3 medium-3 columns">
-        <h4>Add new experiment</h4>
-        <form action="/add_experiment" method="post">
-            <input type="text" name="expname" placeholder="Experiment">
-            <input type="text" name="dtype" placeholder="Data type">
-            <input id="submit" type="submit" value="Add" class="button medium-12 large-12 radius">
-        </form>
-        </div>
-</div>
+
 {% endblock %}

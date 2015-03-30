@@ -20,10 +20,20 @@ class DiskSpace(object):
     def get_space(self):
         return (self.spaceAvailable, self.totalSpace)
 
+class ScriptProperties(object):
+    '''Attributes of each script formatted for the
+    UI'''
+    def __init__(self, id, filename, script_type, time_interval):
+        self.filename = filename
+        self.script_type = script_type
+        self.interval = time_interval
+
 mainDisk = DiskSpace()
+
 
 def get_date():
     return datetime.date.today().isoformat()
+
 
 def get_free_disk_space(path):
     if not mainDisk.updated:
@@ -41,7 +51,18 @@ def get_free_disk_space(path):
     else:
         return mainDisk.get_space()
 
+
 def hour2seconds(hour):
     '''converts the given hour variable to seconds'''
     seconds = hour * 60 * 60
     return seconds
+
+
+def format_scripts(script_list):
+    '''given a list of script tuples from the database,
+    this adds each scipt to a structure to be properly shown in
+        the web browser'''
+    return [ScriptProperties(*s) for s in script_list]
+
+def file_exists(path):
+    return os.path.isfile(path)

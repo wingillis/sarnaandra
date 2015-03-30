@@ -18,7 +18,8 @@ class Database(object):
     def add_experiment(self, experiment_name, data_type):
         c = self.get_cursor()
         date = helpers.get_date()
-        c.execute('INSERT INTO experiments VALUES (?,?,?,?,?)', (date, date, data_type, 0, experiment_name))
+        c.execute('INSERT INTO experiments VALUES (?,?,?,?,?)',
+                  (date, date, data_type, 0, experiment_name))
         self.save()
         return 0
 
@@ -61,3 +62,13 @@ class Database(object):
         c.execute('''insert into recurring_files values (?,?,?)''', (fullfile, type, seconds_interval))
         self.save()
         return 0
+
+    def get_recurring_scripts(self):
+        '''gets a list of all scripts that will run repeatedly
+        '''
+        c = self.get_cursor()
+        scripts = [s for s in c.execute('select * from recurring_files')]
+        return scripts
+
+
+
