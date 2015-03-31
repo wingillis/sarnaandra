@@ -22,7 +22,7 @@ def add_recurring_task(p, recurrence_time, imprt=True):
         sys.path.append(path)
         library = importlib.import_module(file[:-3])
         tool_tips[p] = library.run.__doc__
-        print(library.run.__doc__)
+        # print(library.run.__doc__)
         print('Importing module {1} from {0}'.format(path, file))
         if imprt:
         	interval = IntervalTrigger(seconds=int(recurrence_time))
