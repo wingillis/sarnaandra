@@ -23,7 +23,7 @@ class DiskSpace(object):
 class ScriptProperties(object):
     '''Attributes of each script formatted for the
     UI'''
-    def __init__(self, id, filename, script_type, time_interval, tooltip):
+    def __init__(self, filename, script_type, time_interval, tooltip):
         self.name = filename
         self.type = script_type
         self.interval = time_interval

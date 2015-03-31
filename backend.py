@@ -14,7 +14,7 @@ scheduler.start()
 running_scripts = {}
 tool_tips = {}
 
-def add_recurring_task(p, recurrence_time):
+def add_recurring_task(p, recurrence_time, imprt=True):
     '''adds a file (currently only python scripts)
         to be run once every recurrence_time (which is in seconds)'''
     if helpers.file_exists(p):
@@ -22,9 +22,11 @@ def add_recurring_task(p, recurrence_time):
         sys.path.append(path)
         library = importlib.import_module(file[:-3])
         tool_tips[p] = library.run.__doc__
+        print(library.run.__doc__)
         print('Importing module {1} from {0}'.format(path, file))
-        interval = IntervalTrigger(seconds=int(recurrence_time))
-        running_scripts[p] = scheduler.add_job(library.run, interval)
+        if imprt:
+        	interval = IntervalTrigger(seconds=int(recurrence_time))
+        	running_scripts[p] = scheduler.add_job(library.run, interval)
         return 0
     else:
         return 1
@@ -44,5 +46,5 @@ def get_tool_tips(path):
 
 def load_scripts(db):
     scripts = db.get_recurring_scripts()
-    [add_recurring_task(s[0], s[2]) for s in scripts]
+    [add_recurring_task(s[0], s[2], imprt=False) for s in scripts]
     return 0
