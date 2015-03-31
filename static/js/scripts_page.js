@@ -16,11 +16,11 @@ var change_select_field = function(data) {
 		});
 };
 
-// filepath_input.addEventListener('input', function() {
-// 	$.ajax({url:'/filepath', 
-// 		data: {path:filepath_input.value}, 
-// 		success: change_select_field});
-// });
+filepath_input.addEventListener('input', function() {
+	$.ajax({url:'/filepath', 
+		data: {path:filepath_input.value}, 
+		success: change_select_field});
+});
 
 var update_select_field = function() {
 		$.ajax({url:'/filepath', 
