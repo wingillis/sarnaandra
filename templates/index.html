@@ -14,13 +14,13 @@
         <nav class="tab-bar">
             <section class="left-small"><a class="left-off-canvas-toggle menu-icon"><span></span></a></section>
             <section class="middle tab-bar-section">
-                <h1 class="title">Data Manager</h1>
+                <h1 class="title">Sarnandra</h1>
             </section>
         </nav>
         <aside class="left-off-canvas-menu">
             <ul class="off-canvas-list">
                 <li>
-                    <label>Data Manager</label>
+                    <label>Sarnandra</label>
                 </li>
                 <li><a href="/">Experiments</a></li>
                 <li><a href="#">Last Experiment</a></li>
@@ -36,7 +36,7 @@
         <section class="main-section">
             <div class="row">
                 <div class="medium-12 columns app-title">
-                    <h2>Data Manager</h2>
+                    <h2>Sarnandra</h2>
                     {% if main %}
                     <br>
                     <span id="diskSpaceSpan">You have {{freespace}}GB free out of {{totalspace}}GB ({{percentage}}%) in hard drive: {{drive}}</span>
@@ -62,5 +62,8 @@
 <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.1/js/vendor/placeholder.js"></script>-->
 <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.1/js/foundation/foundation.offcanvas.min.js"></script>-->
 <script src="static/js/main.js"></script>
+{% block scripts %}
+
+{% endblock %}
 </body>
 </html>

@@ -58,7 +58,7 @@ class Database(object):
         '''Adds an entry for a recurring script.
         Interval is in hours.'''
         c = self.get_cursor()
-        c.execute('''insert into recurring_files values (?,?,?)''', (fullfile, type, interval))
+        c.execute('''insert into recurring_files (filename, script_type, time_interval) values (?,?,?)''', (fullfile, type, interval))
         self.save()
         return 0
 

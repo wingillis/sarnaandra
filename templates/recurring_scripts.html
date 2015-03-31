@@ -2,12 +2,19 @@
 {% block body %}
 <div class="row">
 	<div class="large-12 medium-12 small-12 columns">
-		<form>
-            <input type="text" name="filepath" placeholder="Path of script (with name)">
-            <input type="text" name="type" placeholder="File type">
-            <input type="number" name="interval" autocomplete="on" placeholder="interval (in hours)">
+		<form action="/add_scripts" method="post">
+            <input type="text" id="fp" name="filepath" placeholder="Path of script (with name)">
+            Next folder: <select name="folder" id="file_select">
+            	
+            </select><br>
+            File type:
+            <select name="type">
+            	<option value="py">py</option>
+            </select>
+            <br><br>
+            <input type="number" step="any" name="interval" autocomplete="on" placeholder="interval (in hours)">
             <!--<span class="postfix">hrs</span>-->
-            <input type="submit" class="button medium-12 large-12 radius" value="Add script">
+            <input type="submit" id="subbut" class="button medium-12 large-12 radius" value="Add script">
         </form>
 	</div>
 </div>
@@ -16,10 +23,14 @@
     {% for script in scripts %}
     <div class="large-4 medium-4 columns">
         <p>Name: {{script.name}}</p>
-        <p>Location: {{script.location}}</p>
+        <p>Type: {{script.type}}</p>
         <p>Time interval: {{script.interval}}</p>
     </div>
     {% endfor %}
 </div>
 {% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="/static/js/scripts_page.js"></script>
 {% endblock %}

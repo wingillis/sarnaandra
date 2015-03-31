@@ -24,8 +24,8 @@ class ScriptProperties(object):
     '''Attributes of each script formatted for the
     UI'''
     def __init__(self, id, filename, script_type, time_interval):
-        self.filename = filename
-        self.script_type = script_type
+        self.name = filename
+        self.type = script_type
         self.interval = time_interval
 
 mainDisk = DiskSpace()
@@ -54,7 +54,7 @@ def get_free_disk_space(path):
 
 def hour2seconds(hour):
     '''converts the given hour variable to seconds'''
-    seconds = hour * 60 * 60
+    seconds = float(hour) * 60 * 60
     return seconds
 
 
@@ -68,4 +68,6 @@ def file_exists(path):
     return os.path.isfile(path)
 
 def get_dirs_in_path(path):
-    return list(filter(os.path.isdir, os.listdir(path)))
+    fs = os.listdir(path)
+    directories = [s for s in fs if os.path.isdir(os.path.join(path, s))]
+    return directories

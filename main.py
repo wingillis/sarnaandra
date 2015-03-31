@@ -12,7 +12,7 @@ if platform.system() == 'Windows':
 else:
     default_drive_path = os.path.expanduser('~')
 
-production = True
+production = False
 
 # create an instance of the app
 app = Flask(__name__)
@@ -36,35 +36,45 @@ def add_exp():
         base.add_experiment(request.form['expname'], request.form['dtype'])
     return redirect('/')
 
-@app.route('/recurring_scripts', methods=['post', 'get'])
+@app.route('/recurring_scripts', methods=['get'])
 def recurring_scripts():
+    scripts = base.get_recurring_scripts()
+    if scripts:
+        scripts = helpers.format_scripts(scripts)
+        kwargs = {'scripts': scripts, 'main': False}
+        return render_template('recurring_scripts.html', **kwargs)
+    else:
+        kwargs = {'scripts':None, 'main': False}
+        return render_template('recurring_scripts.html', **kwargs)
+
+@app.route('/add_scripts', methods=['POST', 'get'])
+def add_scripts():
     if request.method == 'POST':
         seconds_interval = helpers.hour2seconds(request.form['interval'])
         kwargs = {'fullfile': request.form['filepath'],
                   'type': request.form['type'],
                   'interval': seconds_interval}
         if helpers.file_exists(kwargs['fullfile']):
+            head, tail = os.path.split(kwargs['fullfile'])
             base.add_recurring_script(**kwargs) # to database
-            backend.add_recurring_task(kwargs['fullfile'], kwargs['interval'])
+            backend.add_recurring_task(head, tail, kwargs['interval'])
         else:
             # alert user that file doesn't exist
-            pass
-    elif request.method == 'GET':
-        scripts = base.get_recurring_scripts()
-        if scripts:
-            scripts = helpers.format_scripts(scripts)
-            kwargs = {'scripts': scripts, 'main': False}
-            return render_template('recurring_scripts.html', **kwargs)
-        else:
-            kwargs = {'scripts':None, 'main': False}
-            return render_template('recurring_scripts.html', **kwargs)
+            print('File does not exist')
+    return redirect('/recurring_scripts')
 
 @app.route('/filepath')
 def get_next_dirs():
     # assumes path is located in
-    path = request.get_json()['path']
-    dir_list = helpers.get_dirs_in_path(path)
-    paths = {'paths': dir_list}
+    path = request.args.get('path')
+
+    if path == '__base__':
+        fullpath = os.path.expanduser('~')
+        dir_list = helpers.get_dirs_in_path(fullpath)
+    else:
+        dir_list = helpers.get_dirs_in_path(path)
+        fullpath = path
+    paths = {'paths': dir_list, 'fullpath': fullpath}
     return jsonify(**paths)
 
 
