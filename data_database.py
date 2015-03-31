@@ -66,7 +66,7 @@ class Database(object):
         '''gets a list of all scripts that will run repeatedly
         '''
         c = self.get_cursor()
-        scripts = [s for s in c.execute('select * from recurring_files')]
+        scripts = [s for s in c.execute('select filename, script_type, time_interval from recurring_files')]
         return scripts
 
 

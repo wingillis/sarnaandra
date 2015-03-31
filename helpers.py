@@ -23,10 +23,11 @@ class DiskSpace(object):
 class ScriptProperties(object):
     '''Attributes of each script formatted for the
     UI'''
-    def __init__(self, id, filename, script_type, time_interval):
+    def __init__(self, id, filename, script_type, time_interval, tooltip):
         self.name = filename
         self.type = script_type
         self.interval = time_interval
+        self.tooltip = tooltip
 
 mainDisk = DiskSpace()
 
@@ -58,11 +59,12 @@ def hour2seconds(hour):
     return seconds
 
 
-def format_scripts(script_list):
+def format_scripts(script_list, tip):
     '''given a list of script tuples from the database,
     this adds each scipt to a structure to be properly shown in
         the web browser'''
-    return [ScriptProperties(*s) for s in script_list]
+
+    return [ScriptProperties(*s, tooltip=tip[i]) for i,s in enumerate(script_list)]
 
 def file_exists(path):
     return os.path.isfile(path)

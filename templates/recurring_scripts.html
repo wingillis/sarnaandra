@@ -22,9 +22,10 @@
 <div class="row">
     {% for script in scripts %}
     <div class="large-4 medium-4 columns">
-        <p>Name: {{script.name}}</p>
+        <p><span data-tooltip aria-haspopup="true" class="has-tip" title="{{script.tooltip}}">Name: {{script.name}}</span></p>
         <p>Type: {{script.type}}</p>
         <p>Time interval: {{script.interval}}</p>
+        <a href="#" class="button success">Remove Script</a>
     </div>
     {% endfor %}
 </div>

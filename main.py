@@ -20,6 +20,7 @@ app = Flask(__name__)
 # open the database
 base = db.Database()
 
+backend.load_scripts(base)
 # the main page loads to a list of the experiments
 @app.route("/")
 def main():
@@ -39,9 +40,13 @@ def add_exp():
 @app.route('/recurring_scripts', methods=['get'])
 def recurring_scripts():
     scripts = base.get_recurring_scripts()
-    if scripts:
-        scripts = helpers.format_scripts(scripts)
-        kwargs = {'scripts': scripts, 'main': False}
+    filt_scripts = list(filter(lambda s: helpers.file_exists(s[0]), scripts))
+    if filt_scripts:
+
+        tips = [backend.get_tool_tips(p[0]) for p in filt_scripts]
+
+        filt_scripts = helpers.format_scripts(filt_scripts, tips)
+        kwargs = {'scripts': filt_scripts, 'main': False}
         return render_template('recurring_scripts.html', **kwargs)
     else:
         kwargs = {'scripts':None, 'main': False}
@@ -55,9 +60,8 @@ def add_scripts():
                   'type': request.form['type'],
                   'interval': seconds_interval}
         if helpers.file_exists(kwargs['fullfile']):
-            head, tail = os.path.split(kwargs['fullfile'])
             base.add_recurring_script(**kwargs) # to database
-            backend.add_recurring_task(head, tail, kwargs['interval'])
+            backend.add_recurring_task(kwargs['fullfile'], kwargs['interval'])
         else:
             # alert user that file doesn't exist
             print('File does not exist')
