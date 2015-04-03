@@ -1,4 +1,4 @@
-from flask import Flask, request, url_for, render_template,redirect, jsonify
+from flask import Flask, request, url_for, render_template, redirect, jsonify
 import data_database as db
 import platform
 import helpers
@@ -22,20 +22,26 @@ base = db.Database()
 
 backend.load_scripts(base)
 # the main page loads to a list of the experiments
+
+
 @app.route("/")
 def main():
     exps = base.get_all_experiments()
     (space, total) = helpers.get_free_disk_space(default_drive_path)
-    kwargs = {'experiments': exps, 'freespace': round(space, 2), 'totalspace': round(total, 2),
-              'percentage': round(float(space)/total*100,2), 'drive': default_drive_path,
+    kwargs = {'experiments': exps, 'freespace': round(space, 2),
+              'totalspace': round(total, 2),
+              'percentage': round(float(space)/total*100, 2),
+              'drive': default_drive_path,
               'main': True}
     return render_template('exp_lists.html', **kwargs)
+
 
 @app.route("/add_experiment", methods=['post', 'get'])
 def add_exp():
     if request.method == 'POST':
         base.add_experiment(request.form['expname'], request.form['dtype'])
     return redirect('/')
+
 
 @app.route('/recurring_scripts', methods=['get'])
 def recurring_scripts():
@@ -49,8 +55,9 @@ def recurring_scripts():
         kwargs = {'scripts': filt_scripts, 'main': False}
         return render_template('recurring_scripts.html', **kwargs)
     else:
-        kwargs = {'scripts':None, 'main': False}
+        kwargs = {'scripts': None, 'main': False}
         return render_template('recurring_scripts.html', **kwargs)
+
 
 @app.route('/add_scripts', methods=['POST', 'get'])
 def add_scripts():
@@ -60,12 +67,13 @@ def add_scripts():
                   'type': request.form['type'],
                   'interval': seconds_interval}
         if helpers.file_exists(kwargs['fullfile']):
-            base.add_recurring_script(**kwargs) # to database
+            base.add_recurring_script(**kwargs)  # to database
             backend.add_recurring_task(kwargs['fullfile'], kwargs['interval'])
         else:
             # alert user that file doesn't exist
             print('File does not exist')
     return redirect('/recurring_scripts')
+
 
 @app.route('/filepath')
 def get_next_dirs():
@@ -82,10 +90,12 @@ def get_next_dirs():
     return jsonify(**paths)
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
 
     if production:
-        threading.Timer(1.25, lambda: webbrowser.open('http://127.0.0.1:5000')).start()
+        threading.Timer(1.25,
+                        lambda: webbrowser.open('http://127.0.0.1:5000')
+                        ).start()
     else:
         app.debug = True
 
