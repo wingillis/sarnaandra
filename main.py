@@ -102,7 +102,7 @@ def see_exp(experiment_name):
 @app.route('/file/<file_name>', methods=['get'])
 def file_info(file_name):
     '''Given the path of the file and the filename,
-    this function gives back all the informatino for
+    this function gives back all the information for
     that one file'''
 
     return 'File information  view not implemented yet'
