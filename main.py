@@ -96,7 +96,10 @@ def see_exp(experiment_name):
     the result is given as a variable on this page. This
     page shows the files associated with this experiment'''
 
-    return 'Experiment file view not implemented yet'
+    files = base.get_experiment_files(experiment_name)
+    kwargs = {'files': files}
+
+    return 'Experiment name: {0}'.format(experiment_name)
 
 
 @app.route('/file/<file_name>', methods=['get'])

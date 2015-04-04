@@ -55,6 +55,16 @@ class Database(object):
         self.save()
         return 0
 
+    def get_experiment_files(experiment_name):
+        ''':params experiment name, string
+        :return list of experiment files (formatted in a class)
+        '''
+        c = self.get_cursor()
+        all_files = [f for f in c.execute(
+            'select * from files where experiment=?', experiment_name)]
+        # convert all_files into a structure
+        return all_files
+
     def add_experiment_files(self):
         '''Given a list of dictionaries with fields the files
                 table, this function adds all of them to the database'''
