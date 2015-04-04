@@ -90,6 +90,24 @@ def get_next_dirs():
     return jsonify(**paths)
 
 
+@app.route('/exp/<experiment_name>', methods=['get'])
+def see_exp(experiment_name):
+    '''An experiment is selected from the main page and
+    the result is given as a variable on this page. This
+    page shows the files associated with this experiment'''
+
+    return 'Experiment file view not implemented yet'
+
+
+@app.route('/file/<file_name>', methods=['get'])
+def file_info(file_name):
+    '''Given the path of the file and the filename,
+    this function gives back all the informatino for
+    that one file'''
+
+    return 'File information  view not implemented yet'
+
+
 if __name__ == "__main__":
 
     if production:
