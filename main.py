@@ -97,7 +97,8 @@ def see_exp(experiment_name):
     page shows the files associated with this experiment'''
 
     files = base.get_experiment_files(experiment_name)
-    kwargs = {'files': files}
+    formatted_files = helpers.format_files(files)
+    kwargs = {'files': formatted_files}
 
     return 'Experiment name: {0}'.format(experiment_name)
 

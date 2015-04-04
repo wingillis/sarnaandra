@@ -1,18 +1,19 @@
-__author__ = 'wgillis'
-
 import importlib
 import os
 import sys
 import helpers
-
-from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
+from apscheduler.schedulers.background import BackgroundScheduler
+
+__author__ = 'wgillis'
+
 
 scheduler = BackgroundScheduler()
 scheduler.start()
 
 running_scripts = {}
 tool_tips = {}
+
 
 def add_recurring_task(p, recurrence_time):
     '''adds a file (currently only python scripts)
@@ -35,12 +36,14 @@ def remove_recurring_task(path):
     running_scripts.pop(path)
     return 0
 
+
 def get_tool_tips(path):
     # do better managing of tool tip presence
     if tool_tips[path]:
         return tool_tips[path]
     else:
         return None
+
 
 def load_scripts(db):
     scripts = db.get_recurring_scripts()

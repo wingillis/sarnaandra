@@ -62,7 +62,7 @@ class Database(object):
         c = self.get_cursor()
         all_files = [f for f in c.execute(
             'select * from files where experiment=?', experiment_name)]
-        # convert all_files into a structure
+        # convert all_files into a structure (currently done in main script)
         return all_files
 
     def add_experiment_files(self):
