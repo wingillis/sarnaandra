@@ -32,7 +32,8 @@ def main():
               'totalspace': round(total, 2),
               'percentage': round(float(space)/total*100, 2),
               'drive': default_drive_path,
-              'main': True}
+              'main': True,
+              'reveal_modal': True}
     return render_template('exp_lists.html', **kwargs)
 
 
@@ -52,10 +53,10 @@ def recurring_scripts():
         tips = [backend.get_tool_tips(p[0]) for p in filt_scripts]
 
         filt_scripts = helpers.format_scripts(filt_scripts, tips)
-        kwargs = {'scripts': filt_scripts, 'main': False}
+        kwargs = {'scripts': filt_scripts, 'main': False, 'reveal_modal': True}
         return render_template('recurring_scripts.html', **kwargs)
     else:
-        kwargs = {'scripts': None, 'main': False}
+        kwargs = {'scripts': None, 'main': False, 'reveal_modal': True}
         return render_template('recurring_scripts.html', **kwargs)
 
 
@@ -110,6 +111,13 @@ def file_info(file_name):
     that one file'''
 
     return 'File information  view not implemented yet'
+
+
+@app.route('/settings', methods=['get', 'post'])
+def settings():
+    '''Displays the settings for the current user'''
+
+    return 'Settings view has not been implemented yet'
 
 
 if __name__ == "__main__":
