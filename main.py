@@ -1,4 +1,4 @@
-from flask import Flask, request, url_for, render_template,redirect, jsonify
+from flask import Flask, request, url_for, render_template, redirect, jsonify
 import data_database as db
 import platform
 import helpers
@@ -22,20 +22,27 @@ base = db.Database()
 
 backend.load_scripts(base)
 # the main page loads to a list of the experiments
+
+
 @app.route("/")
 def main():
     exps = base.get_all_experiments()
     (space, total) = helpers.get_free_disk_space(default_drive_path)
-    kwargs = {'experiments': exps, 'freespace': round(space, 2), 'totalspace': round(total, 2),
-              'percentage': round(float(space)/total*100,2), 'drive': default_drive_path,
-              'main': True}
+    kwargs = {'experiments': exps, 'freespace': round(space, 2),
+              'totalspace': round(total, 2),
+              'percentage': round(float(space)/total*100, 2),
+              'drive': default_drive_path,
+              'main': True,
+              'reveal_modal': True}
     return render_template('exp_lists.html', **kwargs)
+
 
 @app.route("/add_experiment", methods=['post', 'get'])
 def add_exp():
     if request.method == 'POST':
         base.add_experiment(request.form['expname'], request.form['dtype'])
     return redirect('/')
+
 
 @app.route('/recurring_scripts', methods=['get'])
 def recurring_scripts():
@@ -46,11 +53,12 @@ def recurring_scripts():
         tips = [backend.get_tool_tips(p[0]) for p in filt_scripts]
 
         filt_scripts = helpers.format_scripts(filt_scripts, tips)
-        kwargs = {'scripts': filt_scripts, 'main': False}
+        kwargs = {'scripts': filt_scripts, 'main': False, 'reveal_modal': True}
         return render_template('recurring_scripts.html', **kwargs)
     else:
-        kwargs = {'scripts':None, 'main': False}
+        kwargs = {'scripts': None, 'main': False, 'reveal_modal': True}
         return render_template('recurring_scripts.html', **kwargs)
+
 
 @app.route('/add_scripts', methods=['POST', 'get'])
 def add_scripts():
@@ -60,12 +68,13 @@ def add_scripts():
                   'type': request.form['type'],
                   'interval': seconds_interval}
         if helpers.file_exists(kwargs['fullfile']):
-            base.add_recurring_script(**kwargs) # to database
+            base.add_recurring_script(**kwargs)  # to database
             backend.add_recurring_task(kwargs['fullfile'], kwargs['interval'])
         else:
             # alert user that file doesn't exist
             print('File does not exist')
     return redirect('/recurring_scripts')
+
 
 @app.route('/filepath')
 def get_next_dirs():
@@ -82,10 +91,41 @@ def get_next_dirs():
     return jsonify(**paths)
 
 
-if __name__=="__main__":
+@app.route('/exp/<experiment_name>', methods=['get'])
+def see_exp(experiment_name):
+    '''An experiment is selected from the main page and
+    the result is given as a variable on this page. This
+    page shows the files associated with this experiment'''
+
+    files = base.get_experiment_files(experiment_name)
+    formatted_files = helpers.format_files(files)
+    kwargs = {'files': formatted_files}
+
+    return 'Experiment name: {0}'.format(experiment_name)
+
+
+@app.route('/file/<file_name>', methods=['get'])
+def file_info(file_name):
+    '''Given the path of the file and the filename,
+    this function gives back all the information for
+    that one file'''
+
+    return 'File information  view not implemented yet'
+
+
+@app.route('/settings', methods=['get', 'post'])
+def settings():
+    '''Displays the settings for the current user'''
+
+    return 'Settings view has not been implemented yet'
+
+
+if __name__ == "__main__":
 
     if production:
-        threading.Timer(1.25, lambda: webbrowser.open('http://127.0.0.1:5000')).start()
+        threading.Timer(1.25,
+                        lambda: webbrowser.open('http://127.0.0.1:5000')
+                        ).start()
     else:
         app.debug = True
 

@@ -1,23 +1,5 @@
 {% extends "index.html" %}
 {% block body %}
-<div class="row">
-	<div class="large-12 medium-12 small-12 columns">
-		<form action="/add_scripts" method="post">
-            <input type="text" id="fp" name="filepath" placeholder="Path of script (with name)">
-            Next folder: <select name="folder" id="file_select">
-            	
-            </select><br>
-            File type:
-            <select name="type">
-            	<option value="py">py</option>
-            </select>
-            <br><br>
-            <input type="number" step="any" name="interval" autocomplete="on" placeholder="interval (in hours)">
-            <!--<span class="postfix">hrs</span>-->
-            <input type="submit" id="subbut" class="button medium-12 large-12 radius" value="Add script">
-        </form>
-	</div>
-</div>
 {% if scripts %}
 <div class="row">
     {% for script in scripts %}
@@ -30,8 +12,28 @@
     {% endfor %}
 </div>
 {% endif %}
+{% if reveal_modal %}
+<div id="myModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+  <h2 id="modalTitle">Add a recurring script</h2>
+  <form action="/add_scripts" method="post">
+        <input type="text" id="fp" name="filepath" placeholder="Path of script (with name)"><br>
+        Next folder: <select name="folder" id="file_select">
+                
+        </select><br>
+        File type:
+            <select name="type">
+                <option value="py">py</option>
+            </select>
+            <br><br>
+            <input type="number" step="any" name="interval" autocomplete="on" placeholder="interval (in hours)">
+            <!--<span class="postfix">hrs</span>-->
+            <input type="submit" id="subbut" class="button medium-12 large-12 radius" value="Add script">
+  </form>
+  <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+</div>
+{% endif %}
 {% endblock %}
 
 {% block scripts %}
-<script type="text/javascript" src="/static/js/scripts_page.js"></script>
+<script type="text/javascript" src="/static/js/file_selector.js"></script>
 {% endblock %}
