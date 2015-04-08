@@ -46,7 +46,7 @@ class Database(object):
 
     def get_tables():
         '''Returns a list of tables implemented in this database'''
-        return list()
+        return list(map(lambda a: a[0], c.execute("SELECT name FROM sqlite_master WHERE type='table';").fetchall()))
 
     def add_experiment_file(self, fullfile, experiment, data_type):
         c = self.get_cursor()
@@ -69,10 +69,12 @@ class Database(object):
         # convert all_files into a structure (currently done in main script)
         return all_files
 
+
     def add_experiment_files(self):
         '''Given a list of dictionaries with fields the files
                 table, this function adds all of them to the database'''
         pass
+
 
     def add_recurring_script(self, fullfile, type, interval):
         '''Adds an entry for a recurring script.
@@ -83,6 +85,7 @@ class Database(object):
         self.save()
         return 0
 
+
     def get_recurring_scripts(self):
         '''gets a list of all scripts that will run repeatedly
         '''
@@ -90,3 +93,12 @@ class Database(object):
         scripts = [s for s in c.execute('''select filename,
             script_type, time_interval from recurring_files''')]
         return scripts
+
+
+    def add_table(self, exec_string):
+        '''Only used very rarely, in setup in the beginning. Creates tables
+        needed by the program to run'''
+        c = self.get_cursor()
+        c.execute(exec_string)
+        return 0
+
