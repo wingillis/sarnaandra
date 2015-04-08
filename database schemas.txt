@@ -1,11 +1,11 @@
-Experiments
+experiments
     date_begin
     date_end
     data_type
     files
     name
 
-Files
+files
     date_added
     date_modified
     data_type

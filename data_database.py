@@ -44,6 +44,10 @@ class Database(object):
         self.closed = True
         return 0
 
+    def get_tables():
+        '''Returns a list of tables implemented in this database'''
+        return list()
+
     def add_experiment_file(self, fullfile, experiment, data_type):
         c = self.get_cursor()
         date = helpers.get_date()
