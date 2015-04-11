@@ -8,24 +8,37 @@ from apscheduler.schedulers.background import BackgroundScheduler
 __author__ = 'wgillis'
 
 
-scheduler = BackgroundScheduler()
-scheduler.start()
+scheduler = None
+def begin():
+    global scheduler
+    scheduler = BackgroundScheduler()
+    scheduler.start()
+    scheduler.print_jobs()
+    print('Startup completed')
 
 running_scripts = {}
 tool_tips = {}
 
+def print_jobs():
+    print('Printing get jobs')
+    f = scheduler.get_jobs()
+    for i in f:
+        print(i)
 
 def add_recurring_task(p, recurrence_time):
     '''adds a file (currently only python scripts)
         to be run once every recurrence_time (which is in seconds)'''
     if helpers.file_exists(p):
+        scheduler.print_jobs()
         path, file = os.path.split(p)
         sys.path.append(path)
         library = importlib.import_module(file[:-3])
         tool_tips[p] = library.run.__doc__
         print('Importing module {1} from {0}'.format(path, file))
         interval = IntervalTrigger(seconds=int(recurrence_time))
-        running_scripts[p] = scheduler.add_job(library.run, interval)
+        if p not in running_scripts:
+            running_scripts[p] = scheduler.add_job(library.run, interval)
+        scheduler.print_jobs()
         return 0
     else:
         return 1
@@ -45,7 +58,9 @@ def get_tool_tips(path):
         return None
 
 
-def load_scripts(db):
-    scripts = db.get_recurring_scripts()
-    [add_recurring_task(s[0], s[2]) for s in scripts]
+def load_scripts(db, production):
+    
+    if production:
+        scripts = db.get_recurring_scripts()
+        [add_recurring_task(s[0], s[2]) for s in scripts]
     return 0

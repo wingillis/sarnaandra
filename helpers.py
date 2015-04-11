@@ -99,6 +99,7 @@ def make_file_kwargs(file_list):
     ''':params List of files (in tuple format)
     '''
     return_list = []
+    kwargs = {}
     for file in file_list:
         kwargs['date_added'] = file[0]
         kwargs['date_modified'] = file[1]

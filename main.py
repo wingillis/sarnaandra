@@ -20,9 +20,10 @@ app = Flask(__name__)
 # open the database
 base = db.Database()
 
-backend.load_scripts(base)
+backend.begin()
+backend.load_scripts(base, production)
 # the main page loads to a list of the experiments
-
+backend.print_jobs()
 
 @app.route("/")
 def main():
