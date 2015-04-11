@@ -4,6 +4,7 @@ experiments
     data_type
     files
     name
+    folder_paths
 
 files
     date_added
