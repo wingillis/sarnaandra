@@ -11,15 +11,25 @@
 </div>
 {% if reveal_modal %}
 <div id="myModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
-  <h2 id="modalTitle">Add an expeirment folder to watch</h2>
+  <h2 id="modalTitle">Add an experiment folder to watch</h2>
   <form action="/add_experiment" method="post">
         <input type="text" name="expname" placeholder="Experiment name">
 
-        <input type="text" id="fp" name="folder" placeholder="Path of folder">
-        Next folder: <select name="folder" id="file_select">
-                
-        </select><br>
+        <input type="text" id="fp" name="folderpath" placeholder="Path of folder">
+        <div class="row">
+          <div class="large-6 medium-6 small-6 columns">
+            <h4>Folders</h4>
+            <pre id="file_select"></pre>
+          </div>
+          <div class="large-6 medium-6 small-6 columns">
+            <h4>Files (First 100)</h4>
+            <pre id="files"></pre>
+        </div>
+        <br>
         <input type="text" name="dtype" placeholder="Data type">
+        <br>
+        What time interval would you like me to check for new files?
+        <input type="number" name="timeInterval" placeholder="In hours">
         <br>
         <input id="submit" type="submit" value="Add" class="button medium-12 large-12 radius">
   </form>

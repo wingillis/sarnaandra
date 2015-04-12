@@ -6,7 +6,7 @@ import os
 import webbrowser
 import threading
 import backend
-
+import make_database
 
 if platform.system() == 'Windows':
     default_drive_path = 'C:\\'
@@ -21,10 +21,13 @@ app = Flask(__name__)
 # open the database
 base = db.Database()
 
+# should I check to see if this is the user's first time?
+make_database.run(base)
+
 backend.begin()
-backend.load_scripts(base, production)
+backend.load_scripts(base)
 # the main page loads to a list of the experiments
-backend.print_jobs()
+
 
 @app.route("/")
 def main():
@@ -42,10 +45,7 @@ def main():
 @app.route("/add_experiment", methods=['post', 'get'])
 def add_exp():
     if request.method == 'POST':
-	expename = request.form['expname']
-	dtype = request.form['dtype']
-	folder = request.form['folder']
-        base.add_experiment(request.form['expname'], request.form['dtype'])
+        base.add_experiment(**request.form)
     return redirect('/')
 
 
@@ -85,14 +85,18 @@ def add_scripts():
 def get_next_dirs():
     # assumes path is located in
     path = request.args.get('path')
-
+    paths = {}
     if path == '__base__':
         fullpath = os.path.expanduser('~')
         dir_list = helpers.get_dirs_in_path(fullpath)
+        paths['first'] = True
     else:
         dir_list = helpers.get_dirs_in_path(path)
         fullpath = path
-    paths = {'paths': dir_list, 'fullpath': fullpath}
+        paths['first'] = False
+    paths['files'] = helpers.get_files_in_path(fullpath)
+    paths['paths'] = dir_list
+    paths['fullpath'] = fullpath
     return jsonify(**paths)
 
 
@@ -122,7 +126,7 @@ def file_info(file_name):
 def settings():
     '''Displays the settings for the current user'''
 
-    return 'Settings view has not been implemented yet'
+    return render_template('settings.html')
 
 
 if __name__ == "__main__":

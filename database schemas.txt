@@ -5,6 +5,7 @@ experiments
     files
     name
     folder_paths
+    timeInterval
 
 files
     date_added
@@ -21,3 +22,14 @@ recurring_files
     filename
     script_type
     time_interval # in seconds
+
+watched_folders
+    id
+    path
+    experiment
+    data_type
+
+settings
+    id
+    key
+    value

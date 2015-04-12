@@ -5,7 +5,7 @@ import os
 __author__ = 'wgillis'
 
 # using sqlite3 to begin with for quick testing, maybe will switch
-# to something else in the future like sqlalchemy or psychopg2
+# to something else in the future like sqlalchemy or psychopg2 or mongodb
 
 
 class Database(object):
@@ -18,11 +18,13 @@ class Database(object):
                                           check_same_thread=False)
         self.closed = False
 
-    def add_experiment(self, experiment_name, data_type):
+    def add_experiment(self, expname, dtype, folderpath, timeInterval):
         c = self.get_cursor()
         date = helpers.get_date()
-        c.execute('INSERT INTO experiments VALUES (?,?,?,?,?)',
-                  (date, date, data_type, 0, experiment_name))
+        # values are: (date_begin, date_end, data_type,
+        # files(number), experiment name, folder path)
+        c.execute('INSERT INTO experiments VALUES (?,?,?,?,?,?,?)',
+                  (date, date, dtype, 0, expname, folderpath, timeInterval))
         self.save()
         return 0
 
@@ -44,8 +46,9 @@ class Database(object):
         self.closed = True
         return 0
 
-    def get_tables():
+    def get_tables(self):
         '''Returns a list of tables implemented in this database'''
+        c = self.get_cursor()
         return list(map(lambda a: a[0], c.execute("SELECT name FROM sqlite_master WHERE type='table';").fetchall()))
 
     def add_experiment_file(self, fullfile, experiment, data_type):
@@ -69,12 +72,10 @@ class Database(object):
         # convert all_files into a structure (currently done in main script)
         return all_files
 
-
     def add_experiment_files(self):
         '''Given a list of dictionaries with fields the files
                 table, this function adds all of them to the database'''
         pass
-
 
     def add_recurring_script(self, fullfile, type, interval):
         '''Adds an entry for a recurring script.
@@ -85,7 +86,6 @@ class Database(object):
         self.save()
         return 0
 
-
     def get_recurring_scripts(self):
         '''gets a list of all scripts that will run repeatedly
         '''
@@ -94,7 +94,6 @@ class Database(object):
             script_type, time_interval from recurring_files''')]
         return scripts
 
-
     def add_table(self, exec_string):
         '''Only used very rarely, in setup in the beginning. Creates tables
         needed by the program to run'''
@@ -102,3 +101,8 @@ class Database(object):
         c.execute(exec_string)
         return 0
 
+    def create_settings(self):
+        c = self.get_cursor()
+        c.execute('insert into settings (k, v) values (?,?)', ('backup_location', ''))
+        c.execute('insert into settings (k, v) values (?,?)', ('backup_name', ''))
+        c.save()

@@ -3,11 +3,13 @@ import ctypes
 import os
 import platform
 import sys
+import toolz
 
 __author__ = 'wgillis'
 
 
 class DiskSpace(object):
+
     def __init__(self):
         self.spaceAvailable = 0
         self.totalSpace = 0
@@ -95,6 +97,10 @@ def format_files(file_list):
     return f_files
 
 
+def get_settings(db):
+    pass
+
+
 def make_file_kwargs(file_list):
     ''':params List of files (in tuple format)
     '''
@@ -119,6 +125,42 @@ def file_exists(path):
 
 
 def get_dirs_in_path(path):
-    fs = os.listdir(path)
-    directories = [s for s in fs if os.path.isdir(os.path.join(path, s))]
+    if not path and platform.system() == 'Windows':
+        import win32api
+        drives = win32api.GetLogicalDriveStrings()
+        drives = [d for d in drives.split('\000') if d]
+        return drives
+    try:
+        fs = os.listdir(path)
+        directories = [s for s in fs if os.path.isdir(os.path.join(path, s))]
+    except Exception as e:
+        print('Exception occurred')
+        print(e)
+        try:
+            head, tail = os.path.split(path)
+            fs = os.listdir(head)
+            directories = filter(lambda a: a.lower().startswith(tail.lower()), fs)
+            directories = list(filter(lambda a:
+                               os.path.isdir(os.path.join(head, a)), directories))
+        except:
+            return None
     return directories
+
+
+def get_files_in_path(path):
+    if path:
+        try:
+            fs = os.listdir(path)
+            directories = [s for s in fs if not os.path.isdir(os.path.join(path, s))]
+        except Exception as e:
+            print('Exception occurred')
+            print(e)
+            try:
+                head, tail = os.path.split(path)
+                fs = os.listdir(head)
+                directories = filter(lambda a: a.lower().startswith(tail.lower()), fs)
+                directories = filter(lambda a:
+                                     not os.path.isdir(os.path.join(head, a)), directories)
+            except:
+                return None
+        return list(toolz.take(100, directories))
