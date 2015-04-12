@@ -7,6 +7,7 @@ import webbrowser
 import threading
 import backend
 
+
 if platform.system() == 'Windows':
     default_drive_path = 'C:\\'
 else:
@@ -41,6 +42,9 @@ def main():
 @app.route("/add_experiment", methods=['post', 'get'])
 def add_exp():
     if request.method == 'POST':
+	expename = request.form['expname']
+	dtype = request.form['dtype']
+	folder = request.form['folder']
         base.add_experiment(request.form['expname'], request.form['dtype'])
     return redirect('/')
 
