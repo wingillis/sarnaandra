@@ -137,6 +137,10 @@ def change_setting(s_name=None):
     return redirect('/settings')
 
 
+def start_watching_folders():
+
+    # get data backup path
+    backup_location = base.get_setting('backup_location')
 
 if __name__ == "__main__":
 

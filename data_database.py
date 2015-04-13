@@ -109,8 +109,10 @@ class Database(object):
 
     def create_settings(self):
         c = self.get_cursor()
-        c.execute('insert into settings (k, v) values (?,?)', ('backup_location', ''))
-        c.execute('insert into settings (k, v) values (?,?)', ('backup_name', ''))
+        c.execute('insert into settings (k, v) values (?,?)',
+                  ('backup_location', ''))
+        c.execute('insert into settings (k, v) values (?,?)',
+                  ('backup_name', ''))
         self.save()
 
     def get_all_settings(self):
@@ -125,4 +127,5 @@ class Database(object):
 
     def get_setting(self, k):
         c = self.get_cursor()
-        return c.execute('select v from settings where k=?', (k,)).fetchone()[0]
+        return c.execute('select v from settings where k=?',
+                         (k,)).fetchone()[0]
