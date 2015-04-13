@@ -40,10 +40,11 @@
                     {% if main %}
                     <br>
                     <span id="diskSpaceSpan">You have {{freespace}}GB free out of {{totalspace}}GB ({{percentage}}%) in hard drive: {{drive}}</span>
-                    <a href="#" class="button">Pick Drive</a>
+                    <!-- <a href="#" class="button">Pick Drive</a> -->
                     <div class="progress large-12 radius success center" id="diskSpace">
                         <span class="meter app-title" style="width: {{100 - percentage}}%"></span>
                     </div>
+                    <h3>Experiment organization location: {{backup}}</h3>
                     {% endif %}
                     {% if reveal_modal %}
                     <a href="#" data-reveal-id="myModal" class="button">Add folder/script/experiment</a>

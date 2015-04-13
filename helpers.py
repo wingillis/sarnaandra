@@ -98,7 +98,8 @@ def format_files(file_list):
 
 
 def get_settings(db):
-    pass
+    settings = db.get_all_settings()
+    return settings
 
 
 def make_file_kwargs(file_list):

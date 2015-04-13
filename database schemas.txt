@@ -30,6 +30,5 @@ watched_folders
     data_type
 
 settings
-    id
     key
     value

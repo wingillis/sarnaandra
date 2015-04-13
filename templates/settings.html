@@ -3,11 +3,15 @@
 <!-- Go through a tuple of values -->
 {% for title, value in setting %}
     <div class="row">
-        <div class="large-12 medium-12 small-12 columns">
-            {{title}}
-            <input name="{{title}}" placeholder="{{title}}" type="text" value="{{value}}">
-            <a href="/change_setting/{{title}}" class="button radius">Change</a>
-        </div>
+        <form action="/change_setting/{{title}}" method="post">
+            <div class="large-10 medium-10 small-10 columns">
+                {{title}}
+                <input name="{{title}}" placeholder="{{title}}" type="text" value="{{value}}">
+            </div>
+            <div class="large-2 medium-2 small-2 columns">
+                <input type="submit" value="Change" class="button radius success">
+            </div>
+        </form>
     </div>
 {% endfor %}
 {% endblock %}

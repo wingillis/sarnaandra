@@ -105,4 +105,18 @@ class Database(object):
         c = self.get_cursor()
         c.execute('insert into settings (k, v) values (?,?)', ('backup_location', ''))
         c.execute('insert into settings (k, v) values (?,?)', ('backup_name', ''))
-        c.save()
+        self.save()
+
+    def get_all_settings(self):
+        c = self.get_cursor()
+        sett = [s for s in c.execute('select * from settings')]
+        return sett
+
+    def update_settings(self, k, v):
+        c = self.get_cursor()
+        c.execute('update settings set v=? where k=?', (v, k))
+        self.save()
+
+    def get_setting(self, k):
+        c = self.get_cursor()
+        return c.execute('select v from settings where k=?', (k,)).fetchone()[0]

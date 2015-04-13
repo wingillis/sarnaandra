@@ -7,7 +7,7 @@ def run(db_handle):
                      'files': 'CREATE TABLE files(date_added text, date_modified text, data_type text, filesize real, name text, experiment text, tags text, additional_files text)',
                      'recurring_files': 'CREATE TABLE recurring_files(id Primary key int, filename text, script_type text, time_interval real)',
                      'watched_folders': "CREATE TABLE watched_folders(id int primary key, path text, experiment text, data_type text)",
-                     'settings': 'CREATE TABLE settings(id int primary key, k text, v text)'}
+                     'settings': 'CREATE TABLE settings(k text, v text)'}
     tables = db_handle.get_tables()
     for key in table_execute.keys():
         if key not in tables:

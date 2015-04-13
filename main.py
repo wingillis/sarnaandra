@@ -38,7 +38,8 @@ def main():
               'percentage': round(float(space)/total*100, 2),
               'drive': default_drive_path,
               'main': True,
-              'reveal_modal': True}
+              'reveal_modal': True,
+              'backup': base.get_setting('backup_location')}
     return render_template('exp_lists.html', **kwargs)
 
 
@@ -119,14 +120,22 @@ def file_info(file_name):
     this function gives back all the information for
     that one file'''
 
-    return 'File information  view not implemented yet'
+    return 'File information view not implemented yet'
 
 
 @app.route('/settings', methods=['get', 'post'])
 def settings():
     '''Displays the settings for the current user'''
+    settings = helpers.get_settings(base)
+    return render_template('settings.html', setting=settings)
 
-    return render_template('settings.html')
+
+@app.route('/change_setting/<s_name>', methods=['post'])
+def change_setting(s_name=None):
+    if s_name:
+        base.update_settings(s_name, request.form[s_name])
+    return redirect('/settings')
+
 
 
 if __name__ == "__main__":
