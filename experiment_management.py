@@ -7,8 +7,8 @@ import shutil
 def initiate_watched_folders(db):
     '''Gets all watched folders and their associated 
     experiments and begins to look for new files'''
-
-    pass
+    folders = db.get_watched_folders()
+    return
 
 
 def parse_file(path):

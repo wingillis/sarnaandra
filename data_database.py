@@ -62,6 +62,12 @@ class Database(object):
         self.save()
         return 0
 
+
+    def get_watched_folders(self):
+	c = self.get_cursor()
+	return [s for s in c.execute('select * from watched_folders')]
+
+
     def get_experiment_files(experiment_name):
         ''':params experiment name, string
         :return list of experiment files (formatted in a class)
