@@ -1,11 +1,11 @@
 import os
 import glob
-import time, datetime
+import datetime
 import shutil
 
 
 def initiate_watched_folders(db):
-    '''Gets all watched folders and their associated 
+    '''Gets all watched folders and their associated
     experiments and begins to look for new files'''
     folders = db.get_watched_folders()
     return
