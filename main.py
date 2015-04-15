@@ -80,7 +80,7 @@ def add_scripts():
                   'interval': seconds_interval}
         if helpers.file_exists(kwargs['fullfile']):
             base.add_recurring_script(**kwargs)  # to database
-            backend.add_recurring_task(kwargs['fullfile'], kwargs['interval'])
+            backend.add_recurring_script(kwargs['fullfile'], kwargs['interval'])
         else:
             # alert user that file doesn't exist
             print('File does not exist')

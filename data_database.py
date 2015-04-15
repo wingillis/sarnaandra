@@ -62,11 +62,15 @@ class Database(object):
         self.save()
         return 0
 
-
     def get_watched_folders(self):
-	c = self.get_cursor()
-	return [s for s in c.execute('select * from watched_folders')]
-
+        c = self.get_cursor()
+        watched_folders = [s for s in c.execute('select (path, experiment) from watched_folders')]
+        interval = int(self.get_setting('watch_folder_interval'))
+        watched_folders = map(lambda a: (a[0], interval, a[1]), watched_folders)
+        if type(watched_folders) is list:
+            return watched_folders
+        else:
+            return list(watched_folders)
 
     def get_experiment_files(experiment_name):
         ''':params experiment name, string
@@ -113,6 +117,8 @@ class Database(object):
                   ('backup_location', ''))
         c.execute('insert into settings (k, v) values (?,?)',
                   ('backup_name', ''))
+        c.execute('insert into settings (k,v) values (?,?)',
+                  ('watch_folder_interval', '10'))
         self.save()
 
     def get_all_settings(self):

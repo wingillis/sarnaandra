@@ -20,8 +20,11 @@ def begin():
 
 
 def set_up_folders(db):
-    
-
+    # each index of watched_folders contains a tuple of the 
+    # folder location, recurrence time and experiment
+    watched_folders = db.get_watched_folders()
+    for (folder_location, recurrence_time, experiment) in watched_folders:
+        add_watched_folder(folder_location, recurrence_time, experiment)
 
 
 def print_jobs():
@@ -31,7 +34,7 @@ def print_jobs():
         print(i)
 
 
-def add_recurring_task(p, recurrence_time):
+def add_recurring_script(p, recurrence_time):
     '''adds a file (currently only python scripts)
         to be run once every recurrence_time (which is in seconds)'''
     if helpers.file_exists(p):
@@ -50,6 +53,11 @@ def add_recurring_task(p, recurrence_time):
         return 1
 
 
+def add_watched_folder(path, check_interval, experiment):
+    # path, interval and experiment are parameters for apscheduler
+    pass
+
+
 def remove_recurring_task(path):
     scheduler.remove_job(running_scripts[path])
     running_scripts.pop(path)
@@ -66,5 +74,5 @@ def get_tool_tips(path):
 
 def load_scripts(db):
     scripts = db.get_recurring_scripts()
-    [add_recurring_task(s[0], s[2]) for s in scripts]
+    [add_recurring_script(s[0], s[2]) for s in scripts]
     return 0
