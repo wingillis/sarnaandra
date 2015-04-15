@@ -15,10 +15,10 @@ def parse_file(path):
     pass
 
 
-def check_watched_files(path, experiment, watch_time, move_path):
+def check_watched_files(path, experiment, padding_time, move_path):
     files = glob.glob(os.path.join(path, '*'))
     now = datetime.datetime.now()
-    td = datetime.timedelta(hours=watch_time)
+    td = datetime.timedelta(minutes=padding_time)
     for f in files:
         t = os.path.getmtime(f)
         t = datetime.datetime.fromtimestamp(t)

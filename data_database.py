@@ -129,3 +129,7 @@ class Database(object):
         c = self.get_cursor()
         return c.execute('select v from settings where k=?',
                          (k,)).fetchone()[0]
+
+    def get_watched_folders(self):
+        c = self.get_cursor()
+        

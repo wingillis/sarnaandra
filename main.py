@@ -25,6 +25,11 @@ base = db.Database()
 make_database.run(base)
 
 backend.begin()
+
+# begin watching folders for new files
+backend.set_up_folders(base)
+
+# load recurring scripts already programmed into the system
 backend.load_scripts(base)
 # the main page loads to a list of the experiments
 

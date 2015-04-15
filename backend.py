@@ -10,6 +10,8 @@ __author__ = 'wgillis'
 
 scheduler = None
 
+running_scripts = {}
+tool_tips = {}
 
 def begin():
     global scheduler
@@ -17,8 +19,9 @@ def begin():
     scheduler.start()
 
 
-running_scripts = {}
-tool_tips = {}
+def set_up_folders(db):
+    
+
 
 
 def print_jobs():
