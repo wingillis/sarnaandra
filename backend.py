@@ -2,6 +2,7 @@ import importlib
 import os
 import sys
 import helpers
+import experiment_management
 from apscheduler.triggers.interval import IntervalTrigger
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -13,6 +14,7 @@ scheduler = None
 running_scripts = {}
 tool_tips = {}
 
+
 def begin():
     global scheduler
     scheduler = BackgroundScheduler()
@@ -20,11 +22,12 @@ def begin():
 
 
 def set_up_folders(db):
-    # each index of watched_folders contains a tuple of the 
+    # each index of watched_folders contains a tuple of the
     # folder location, recurrence time and experiment
     watched_folders = db.get_watched_folders()
+    root_dir = db.get_setting('backup_location')
     for (folder_location, recurrence_time, experiment) in watched_folders:
-        add_watched_folder(folder_location, recurrence_time, experiment)
+        add_watched_folder(folder_location, recurrence_time, experiment, root_dir)
 
 
 def print_jobs():
@@ -38,7 +41,7 @@ def add_recurring_script(p, recurrence_time):
     '''adds a file (currently only python scripts)
         to be run once every recurrence_time (which is in seconds)'''
     if helpers.file_exists(p):
-        scheduler.print_jobs()
+        # scheduler.print_jobs()
         path, file = os.path.split(p)
         sys.path.append(path)
         library = importlib.import_module(file[:-3])
@@ -53,9 +56,20 @@ def add_recurring_script(p, recurrence_time):
         return 1
 
 
-def add_watched_folder(path, check_interval, experiment):
+def add_watched_folder(path, check_interval, experiment, root_dir):
     # path, interval and experiment are parameters for apscheduler
-    pass
+
+    # check if folder exists in the path
+    if os.path.isdir(path):
+        # do what is needed
+
+        interval = IntervalTrigger(hours=check_interval)
+        func = lambda a: experiment_management.check_watched_files(path, experiment, 5, root_dir)
+        scheduler.add_job(func, interval)
+    else:
+        # notify user that path doesn't exist
+        print('Error! The path you mentioned:\n{0}\ndoesn\'t exist!'.format(path))
+        # if implemented, check for other means of notification
 
 
 def remove_recurring_task(path):

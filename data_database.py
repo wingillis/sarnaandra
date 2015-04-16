@@ -138,4 +138,3 @@ class Database(object):
 
     def get_watched_folders(self):
         c = self.get_cursor()
-        
