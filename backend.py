@@ -64,7 +64,7 @@ def add_watched_folder(path, check_interval, experiment, root_dir):
         # do what is needed
 
         interval = IntervalTrigger(hours=check_interval)
-        func = lambda a: experiment_management.check_watched_files(path, experiment, 5, root_dir)
+        func = lambda: experiment_management.check_watched_files(path, experiment, 5, root_dir)
         scheduler.add_job(func, interval)
     else:
         # notify user that path doesn't exist
