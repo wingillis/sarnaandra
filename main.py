@@ -80,7 +80,8 @@ def add_scripts():
                   'interval': seconds_interval}
         if helpers.file_exists(kwargs['fullfile']):
             base.add_recurring_script(**kwargs)  # to database
-            backend.add_recurring_script(kwargs['fullfile'], kwargs['interval'])
+            backend.add_recurring_script(kwargs['fullfile'],
+                                         kwargs['interval'])
         else:
             # alert user that file doesn't exist
             print('File does not exist')
@@ -137,15 +138,27 @@ def settings():
 
 @app.route('/change_setting/<s_name>', methods=['post'])
 def change_setting(s_name=None):
+    '''Quick implementation of settings change. May be able to be
+    implemented differently. Updates setting variable in database'''
     if s_name:
         base.update_settings(s_name, request.form[s_name])
     return redirect('/settings')
 
 
+@app.route('/add_watched_folder', methods=['get', 'post'])
+def main_add_watched_folder(folder_name=None):
+    path = request.form['fp']
+    interval = float(request.form['timeInterval'])
+    experiment = request.form['expname']
+    root_dir = base.get_setting('backup_location')
+    backend.add_watched_folder(path, interval, experiment, root_dir)
+
+
 def start_watching_folders():
 
     # get data backup path
-    backup_location = base.get_setting('backup_location')
+    backend.set_up_folders(base)
+
 
 if __name__ == "__main__":
 
@@ -155,5 +168,6 @@ if __name__ == "__main__":
                         ).start()
     else:
         app.debug = True
+    start_watching_folders()
 
     app.run()
