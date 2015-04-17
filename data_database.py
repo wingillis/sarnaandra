@@ -64,7 +64,7 @@ class Database(object):
 
     def get_watched_folders(self):
         c = self.get_cursor()
-        watched_folders = [s for s in c.execute('select (path, experiment) from watched_folders')]
+        watched_folders = [s for s in c.execute('select path, experiment from watched_folders')]
         interval = int(self.get_setting('watch_folder_interval'))
         watched_folders = map(lambda a: (a[0], interval, a[1]), watched_folders)
         if type(watched_folders) is list:
@@ -136,5 +136,5 @@ class Database(object):
         return c.execute('select v from settings where k=?',
                          (k,)).fetchone()[0]
 
-    def get_watched_folders(self):
+    def get_watched_folder(self):
         c = self.get_cursor()

@@ -26,8 +26,11 @@ def set_up_folders(db):
     # folder location, recurrence time and experiment
     watched_folders = db.get_watched_folders()
     root_dir = db.get_setting('backup_location')
-    for (folder_location, recurrence_time, experiment) in watched_folders:
-        add_watched_folder(folder_location, recurrence_time, experiment, root_dir)
+    if watched_folders:
+        for (folder_location, recurrence_time, experiment) in watched_folders:
+            add_watched_folder(folder_location, recurrence_time, experiment, root_dir)
+    else:
+        print('Watched folders is empty. Maybe there is a new user')
 
 
 def print_jobs():
@@ -65,7 +68,9 @@ def add_watched_folder(path, check_interval, experiment, root_dir):
 
         interval = IntervalTrigger(hours=check_interval)
         func = lambda: experiment_management.check_watched_files(path, experiment, 5, root_dir)
+        print('New watched folder has been added: {0}'.format(path))
         scheduler.add_job(func, interval)
+        scheduler.print_jobs()
     else:
         # notify user that path doesn't exist
         print('Error! The path you mentioned:\n{0}\ndoesn\'t exist!'.format(path))

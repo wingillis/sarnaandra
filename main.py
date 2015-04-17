@@ -145,13 +145,14 @@ def change_setting(s_name=None):
     return redirect('/settings')
 
 
-@app.route('/add_watched_folder', methods=['get', 'post'])
-def main_add_watched_folder(folder_name=None):
-    path = request.form['fp']
+@app.route('/add_watched_folder', methods=['get', 'POST'])
+def main_add_watched_folder():
+    path = request.form['folderpath']
     interval = float(request.form['timeInterval'])
     experiment = request.form['expname']
     root_dir = base.get_setting('backup_location')
     backend.add_watched_folder(path, interval, experiment, root_dir)
+    return redirect('/')
 
 
 def start_watching_folders():

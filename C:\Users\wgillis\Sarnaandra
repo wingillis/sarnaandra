@@ -1,0 +1,3 @@
+for i in range(26):
+	with open('cool file {0}.txt'.format(i), 'w') as f:
+		f.write(str(i)*i)
