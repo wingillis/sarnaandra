@@ -13,7 +13,7 @@ class Database(object):
     # stored in the database
     def __init__(self):
         self.started = True
-        # I did this because it wasn't working for some reason
+        # I did this because threading wasn't working for some reason
         self.connection = sqlite3.connect('dataTunes.db',
                                           check_same_thread=False)
         self.closed = False

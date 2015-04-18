@@ -1,7 +1,7 @@
 experiments
     date_begin
     date_end
-    data_type
+    data_type # change this to file filter, where it is a ',' separated list of file types and what endings to expect
     files
     name
     folder_paths
