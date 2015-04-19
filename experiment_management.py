@@ -26,8 +26,8 @@ def generate_file_path(backup_location, exp, ordering, file_type):
     :return folder path for where the file can be stored'''
     ordering_funcs = {'date': get_date, 'file_type': lambda: file_type,
                       'experiment': lambda: exp,
-                      'backup_location': lambda: backup_location,
-                      ''}
+                      'backup_location': lambda: backup_location
+                      }
     order = [ordering_funcs[val] for val in ordering]
     path = functools.reduce(os.path.join, map(lambda a: a(), order))
     if type(path) is str:

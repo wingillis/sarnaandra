@@ -13,3 +13,8 @@
 #expTitle {
 	text-align: center;
 }
+
+.height-limited {
+	height: 350px;
+	max-height: 350px;
+}

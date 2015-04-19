@@ -15,8 +15,12 @@
   <form action="/add_watched_folder" method="post">
         <input type="text" name="expname" placeholder="Experiment name">
         <br>Data types:
-        <input type="text" name="dtype" placeholder="Data type">
-        <input type="text"name="extension" placeholder="Extension (identifier)">
+        <div id="additionalDataTypes">
+          <input type="text" name="dtype" placeholder="Data type">
+          <input type="text"name="extension" placeholder="Extension (identifier)">
+          <a href="#" id="addDataTypeFilter">Add another data type</a>
+        </div>
+        <div id="copyToHere"></div>
         What time interval would you like me to check for new files?
         <input type="text" name="timeInterval" placeholder="In hours">
         <br>
@@ -26,11 +30,11 @@
         <div class="row">
           <div class="large-6 medium-6 small-6 columns">
             <h4>Folders</h4>
-            <pre id="file_select"></pre>
+            <pre id="file_select" class="height-limited"></pre>
           </div>
           <div class="large-6 medium-6 small-6 columns">
             <h4>Files (First 100)</h4>
-            <pre id="files"></pre>
+            <pre id="files" class="height-limited"></pre>
         </div>
   </form>
   <a class="close-reveal-modal" aria-label="Close">&#215;</a>
