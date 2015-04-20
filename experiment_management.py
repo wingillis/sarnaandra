@@ -22,8 +22,14 @@ def check_watched_files(path, experiment, padding_time, move_path, db):
             # do whatever here now
             path = generate_file_path(move_path, experiment, ordering, ext)
             if path:
-                print('Moving file to {0}'.format(move_path))
-                # shutil.move(f, move_path)
+                print('Moving file to {0}'.format(path))
+                if os.path.exists(path):
+                    # shutil.move(f, path)
+                    pass
+                else:
+                    print('Making directory tree: {0}'.format(path))
+                    os.makedirs(path)
+                    # shutil.move(f, path)
             else:
                 print('Error, path did not work')
 

@@ -4,7 +4,6 @@ import os
 import platform
 import sys
 import toolz
-import main
 
 __author__ = 'wgillis'
 
