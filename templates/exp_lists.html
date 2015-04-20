@@ -14,6 +14,7 @@
   <h2 id="modalTitle">Add an experiment folder to watch</h2>
   <form action="/add_watched_folder" method="post">
         <input type="text" name="expname" placeholder="Experiment name">
+        <!-- Add datatypes here -->
         <br>Data types:
         <div id="additionalDataTypes">
           <input type="text" name="dtype" id="dtype" placeholder="Data type">
@@ -25,7 +26,6 @@
         What time interval would you like me to check for new files?
         <input type="text" name="timeInterval" placeholder="In hours">
         <br>
-        <!-- Add datatypes here -->
         <input id="submit" type="submit" value="Add" class="button medium-12 large-12 radius">
         <input type="text" id="fp" name="folderpath" placeholder="Path of folder">
         <div class="row">

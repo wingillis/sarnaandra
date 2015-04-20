@@ -4,6 +4,7 @@ import os
 import platform
 import sys
 import toolz
+import main
 
 __author__ = 'wgillis'
 
@@ -95,6 +96,11 @@ def format_files(file_list):
     kwarg_file_list = map(make_file_kwargs, file_list)
     f_files = list(map(lambda a: FileProperties(**a), kwarg_file_list))
     return f_files
+
+
+def get_ordering(experiment, db):
+    ordering = db.get_experiment_ordering(experiment)
+    return ordering
 
 
 def get_settings(db):

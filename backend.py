@@ -59,7 +59,7 @@ def add_recurring_script(p, recurrence_time):
         return 1
 
 
-def add_watched_folder(path, check_interval, experiment, root_dir):
+def add_watched_folder(path, check_interval, experiment, root_dir, dtype_ext, db):
     # path, interval and experiment are parameters for apscheduler
 
     # check if folder exists in the path
@@ -67,7 +67,7 @@ def add_watched_folder(path, check_interval, experiment, root_dir):
         # do what is needed
 
         interval = IntervalTrigger(hours=check_interval)
-        func = lambda: experiment_management.check_watched_files(path, experiment, 5, root_dir)
+        func = lambda: experiment_management.check_watched_files(path, experiment, 5, root_dir, db)
         print('New watched folder has been added: {0}'.format(path))
         scheduler.add_job(func, interval)
         scheduler.print_jobs()

@@ -87,6 +87,11 @@ class Database(object):
                 table, this function adds all of them to the database'''
         pass
 
+    def get_experiment_ordering(self, experiment):
+        '''Just a testing implementation. Returns the same ordering
+        every time'''
+        return ['backup_location', 'experiment', 'date', 'file_type']
+
     def add_recurring_script(self, fullfile, type, interval):
         '''Adds an entry for a recurring script.
         Interval is in hours.'''

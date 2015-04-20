@@ -7,11 +7,9 @@ import webbrowser
 import threading
 import backend
 import make_database
+import functools
 
-if platform.system() == 'Windows':
-    default_drive_path = 'C:\\'
-else:
-    default_drive_path = os.path.expanduser('~')
+default_drive_path = os.path.expanduser('~')
 
 production = False
 
@@ -151,7 +149,14 @@ def main_add_watched_folder():
     interval = float(request.form['timeInterval'])
     experiment = request.form['expname']
     root_dir = base.get_setting('backup_location')
-    backend.add_watched_folder(path, interval, experiment, root_dir)
+    # there are 3 keys
+    file_extensions = (len(list(request.form.keys())) - 3)/2
+    # only for testing purposes remove this later
+    dtypes = ['dtype' + str(num) for num in range(file_extensions)]
+    extensions = ['extension' + str(num) for num in range(file_extensions)]
+    dtype_vals = [request.form[t] for t in dtypes]
+    extension_vals = [request.form[t] for t in extensions]
+    backend.add_watched_folder(path, interval, experiment, root_dir, zip(dtype_vals, extension_vals), base)
     return redirect('/')
 
 

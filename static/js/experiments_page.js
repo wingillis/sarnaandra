@@ -33,6 +33,6 @@ var extension_id = extension_name.attr('id');
 extension_name.attr('id', extension_id + dataTypeNumber);
 extension_name.attr('name', extension_id + dataTypeNumber);
 
-
+// allows user to add more file types for experiment to track
 add_another_data_type.click(add_file_filter);
 
