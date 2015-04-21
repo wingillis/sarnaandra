@@ -156,7 +156,7 @@ def main_add_watched_folder():
     extensions = ['extension' + str(num) for num in range(file_extensions)]
     dtype_vals = [request.form[t] for t in dtypes]
     extension_vals = [request.form[t] for t in extensions]
-    backend.add_watched_folder(path, interval, experiment, root_dir, zip(dtype_vals, extension_vals), base)
+    backend.add_watched_folder(path, interval, experiment, root_dir, zip(dtype_vals, extension_vals), db=base)
     return redirect('/')
 
 
