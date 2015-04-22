@@ -55,19 +55,24 @@ def get_date():
     return datetime.date.today().isoformat()
 
 
+# returns amount of free disk space of the path
 def get_free_disk_space(path):
     if not mainDisk.updated:
         if platform.system() == 'Windows':
             free_bytes = ctypes.c_ulonglong(0)
             total = ctypes.c_ulonglong(0)
             ctypes.windll.kernel32.GetDiskFreeSpaceExW(ctypes.c_wchar_p(path),
-                None, ctypes.pointer(total), ctypes.pointer(free_bytes))
+                                                       None,
+                                                       ctypes.pointer(total),
+                                                       ctypes.pointer(
+                                                       free_bytes))
             mainDisk.update_space(free_bytes.value/1024/1024/1024,
                                   total.value/1024/1024/1024)
             return mainDisk.get_space()
         else:
             st = os.statvfs(path)
-            mainDisk.update_space((st.f_bavail * st.f_frsize)/1024.0/1024/1024, (st.f_blocks * st.f_frsize)/1024.0/1024/1024)
+            mainDisk.update_space((st.f_bavail * st.f_frsize)/1024.0/1024/1024,
+                                  (st.f_blocks * st.f_frsize)/1024.0/1024/1024)
             return mainDisk.get_space()
     else:
         return mainDisk.get_space()

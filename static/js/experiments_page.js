@@ -11,7 +11,6 @@ var add_file_filter = function() {
 }
 
 
-
 var dataTypeNumber = 0;
 
 var add_another_data_type = $('#addDataTypeFilter' + dataTypeNumber);
