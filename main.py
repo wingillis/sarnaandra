@@ -1,6 +1,5 @@
 from flask import Flask, request, url_for, render_template, redirect, jsonify
 import data_database as db
-import platform
 import helpers
 import os
 import webbrowser
@@ -156,6 +155,7 @@ def main_add_watched_folder():
     extensions = ['extension' + str(num) for num in range(file_extensions)]
     dtype_vals = [request.form[t] for t in dtypes]
     extension_vals = [request.form[t] for t in extensions]
+    base.add_experiment(experiment, ','.join(dtype_vals), path, interval)
     backend.add_watched_folder(path, interval,
                                experiment, root_dir,
                                zip(dtype_vals, extension_vals), db=base)

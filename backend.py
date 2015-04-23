@@ -3,10 +3,14 @@ import os
 import sys
 import helpers
 import experiment_management
+import logging
 from apscheduler.triggers.interval import IntervalTrigger
 from apscheduler.schedulers.background import BackgroundScheduler
 
 __author__ = 'wgillis'
+
+
+logging.basicConfig()
 
 
 scheduler = None
@@ -28,7 +32,8 @@ def set_up_folders(db):
     root_dir = db.get_setting('backup_location')
     if watched_folders:
         for (folder_location, recurrence_time, experiment, file_types) in watched_folders:
-            dtypes = helpers.format(file_types)
+            # dtypes = helpers.format(file_types)
+            dtypes = file_types
             add_watched_folder(folder_location, recurrence_time, experiment, root_dir, dtypes, add_db=False, db=db)
     else:
         print('Watched folders is empty. Maybe there is a new user')
@@ -60,7 +65,7 @@ def add_recurring_script(p, recurrence_time):
         return 1
 
 
-def add_watched_folder(path, check_interval, experiment, root_dir, file_tpyes, add_db=True, db=None):
+def add_watched_folder(path, check_interval, experiment, root_dir, file_types, add_db=True, db=None):
     # path, interval and experiment are parameters for apscheduler
 
     # check if folder exists in the path
@@ -68,7 +73,8 @@ def add_watched_folder(path, check_interval, experiment, root_dir, file_tpyes, a
         # do what is needed
         # add folder to database if it isn't already there
         if add_db:
-            db.add_watched_folder()
+            strtypes = ','.join(map(lambda a: ','.join(a), file_types))
+            db.add_watched_folder(path, experiment, strtypes, check_interval)
         interval = IntervalTrigger(hours=check_interval)
         func = lambda: experiment_management.check_watched_files(path, experiment, 5, root_dir, db)
         print('New watched folder has been added: {0}'.format(path))

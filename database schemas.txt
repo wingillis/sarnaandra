@@ -5,7 +5,7 @@ experiments
     files
     name
     folder_paths
-    timeInterval
+    
 
 files
     date_added
@@ -28,6 +28,7 @@ watched_folders
     path
     experiment
     data_type
+    check_interval
 
 settings
     key

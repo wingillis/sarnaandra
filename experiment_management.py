@@ -20,16 +20,17 @@ def check_watched_files(path, experiment, padding_time, move_path, db):
         fpath, ext = os.path.splitext(f)
         if (now - td) > t:
             # do whatever here now
+            ext = ext[1:]
             path = generate_file_path(move_path, experiment, ordering, ext)
             if path:
                 print('Moving file to {0}'.format(path))
                 if os.path.exists(path):
-                    # shutil.move(f, path)
-                    pass
+                    shutil.move(f, path)
+
                 else:
                     print('Making directory tree: {0}'.format(path))
                     os.makedirs(path)
-                    # shutil.move(f, path)
+                    shutil.move(f, path)
             else:
                 print('Error, path did not work')
 
@@ -43,8 +44,4 @@ def generate_file_path(backup_location, exp, ordering, file_type):
                       }
     order = [ordering_funcs[val] for val in ordering]
     path = functools.reduce(os.path.join, map(lambda a: a(), order))
-    if type(path) is str:
-        return path
-    else:
-        print('Something is wrong with function generate_file_path, result not string')
-        return False
+    return path

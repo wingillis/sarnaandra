@@ -14,7 +14,9 @@ class Database(object):
     def __init__(self):
         self.started = True
         # I did this because threading wasn't working for some reason
-        self.connection = sqlite3.connect('dataTunes.db',
+        db_path = os.path.expanduser('~')
+        self.connection = sqlite3.connect(os.path.join(db_path,
+                                          'dataManagement.db'),
                                           check_same_thread=False)
         self.closed = False
 
@@ -23,8 +25,8 @@ class Database(object):
         date = helpers.get_date()
         # values are: (date_begin, date_end, data_type,
         # files(number), experiment name, folder path)
-        c.execute('INSERT INTO experiments VALUES (?,?,?,?,?,?,?)',
-                  (date, date, dtype, 0, expname, folderpath, timeInterval))
+        c.execute('INSERT INTO experiments VALUES (?,?,?,?,?,?)',
+                  (date, date, dtype, 0, expname, folderpath))
         self.save()
         return 0
 
@@ -118,8 +120,12 @@ class Database(object):
 
     def create_settings(self):
         c = self.get_cursor()
+        backup_path = os.path.expanduser('~')
+        backup_path = os.path.join(backup_path, 'sarnaandra', 'backup')
+        if not os.path.exists(backup_path):
+            os.makedirs(backup_path)
         c.execute('insert into settings (k, v) values (?,?)',
-                  ('backup_location', ''))
+                  ('backup_location', backup_path))
         c.execute('insert into settings (k, v) values (?,?)',
                   ('backup_name', ''))
         c.execute('insert into settings (k,v) values (?,?)',
@@ -144,5 +150,9 @@ class Database(object):
     def get_watched_folder(self):
         c = self.get_cursor()
 
-    def add_watched_folder(self):
+    def add_watched_folder(self, path, experiment, data_type, interval):
+        c = self.get_cursor()
+        c.execute('insert into watched_folders (path, experiment, data_type, check_interval) values (?,?,?,?)', (path, experiment, data_type, interval))
+        self.save()
+        return 0
         return 'I AM A WATCHED FOLDER'
