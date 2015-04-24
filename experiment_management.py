@@ -7,11 +7,11 @@ import functools
 import helpers
 
 
-def check_watched_files(path, experiment, padding_time, move_path, db):
+def check_watched_files(path, experiment, padding_time, move_path, ordering):
     files = glob.glob(os.path.join(path, '*'))
     now = datetime.datetime.now()
     td = datetime.timedelta(minutes=padding_time)
-    ordering = helpers.get_ordering(experiment, db)
+    # ordering = helpers.get_ordering(experiment, db)
     if not os.path.exists(move_path):
         os.makedirs(move_path)
     for f in files:

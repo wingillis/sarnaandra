@@ -19,6 +19,7 @@ class Experiment(Base):
     date_end = DateTimeField()
     file_filter = CharField()
     name = CharField()
+    ordering = CharField()
     # folder_paths = Column(String)
 
 
@@ -30,6 +31,7 @@ class Watched_Folder(Base):
     experiment_id = ForeignKeyField(Experiment,
                                     related_name='experiment_folders')
     check_interval = IntegerField()  # interval in seconds
+
     # experiment = relationship(Experiment)
 
 

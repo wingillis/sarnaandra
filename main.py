@@ -29,7 +29,7 @@ app = Flask(__name__)
 backend.begin()
 
 # begin watching folders for new files
-backend.set_up_folders(base)
+backend.set_up_folders(Watched_Folder.select(), Settings.get(key=='backup_location'))
 
 # load recurring scripts already programmed into the system
 backend.load_scripts(base)
@@ -168,7 +168,7 @@ def main_add_watched_folder():
     path = request.form['folderpath']
     interval = float(request.form['timeInterval'])
     experiment = request.form['expname']
-    root_dir = base.get_setting('backup_location')
+    root_dir = Settings.get(key=='backup_location')
     # there are 3 keys
     file_extensions = (len(list(request.form.keys())) - 3)/2
 
@@ -180,8 +180,7 @@ def main_add_watched_folder():
     Experiment.create(date_begin=datetime.datetime.now(), date_end=(datetime.datetime.now()+ datetime.timedelta(years=1)), file_filter=','.join(dtypes), name=experiment)
     # base.add_experiment(experiment, ','.join(dtype_vals), path, interval)
     backend.add_watched_folder(path, interval,
-                               experiment, root_dir,
-                               zip(dtype_vals, extension_vals), db=base)
+                               experiment, root_dir)
     return redirect('/')
 
 
