@@ -55,6 +55,10 @@ def get_date():
     return datetime.date.today().isoformat()
 
 
+def generate_default_backup(path):
+    return os.path.join(path, 'sarnaandra', 'backup')
+
+
 # returns amount of free disk space of the path
 def get_free_disk_space(path):
     if not mainDisk.updated:

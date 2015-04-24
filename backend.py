@@ -32,9 +32,9 @@ def set_up_folders(folder_class, root_dir):
     # root_dir = db.get_setting('backup_location')
 
     watched_folders = folder_class.select()
-    ordering = watched_folders[0].experiment_id.ordering
     if watched_folders:
         for folder in watched_folders:
+            ordering = folder.experiment_id.ordering
             add_watched_folder(folder.path, folder.check_interval,
                                folder.experiment_id, root_dir, ordering)
     else:
@@ -103,7 +103,7 @@ def get_tool_tips(path):
         return None
 
 
-def load_scripts(db):
-    scripts = db.get_recurring_scripts()
-    [add_recurring_script(s[0], s[2]) for s in scripts]
+def load_scripts(scripts):
+    # scripts = db.get_recurring_scripts()
+    [add_recurring_script(s.path, s.recurrence_time) for s in scripts]
     return 0

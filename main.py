@@ -11,7 +11,7 @@ import argparse
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('production', default='no')
+parser.add_argument('production', nargs='?')
 arguments = parser.parse_args()
 
 default_drive_path = os.path.expanduser('~')
@@ -28,13 +28,6 @@ app = Flask(__name__)
 
 backend.begin()
 
-# begin watching folders for new files
-backend.set_up_folders(Watched_Folder.select(), Settings.get(key=='backup_location'))
-
-# load recurring scripts already programmed into the system
-backend.load_scripts(base)
-# the main page loads to a list of the experiments
-
 
 @app.before_request
 def _db_connect():
@@ -46,17 +39,38 @@ def _db_close(exc):
     if not db.is_closed():
         db.close()
 
+
+# begin watching folders for new files
+try:
+    backend.set_up_folders(Watched_Folder.select(),
+                           Settings.get(Settings.key == 'backup_location'))
+except DoesNotExist as e:
+    print('No settings yet')
+    _db_connect()
+    tempp = helpers.generate_default_backup(default_drive_path)
+    Settings.create(key='backup_location',
+                    value=tempp)
+    if not os.path.exists(tempp):
+        os.makedirs(tempp)
+    print('Generated default backup location')
+    _db_close(' ')
+# load recurring scripts already programmed into the system
+backend.load_scripts(Scripts.select())
+# the main page loads to a list of the experiments
+
+
 @app.route("/")
 def main():
     exps = Experiment.select()
-    (space, total) = helpers.get_free_disk_space(default_drive_path)
+    backup = Settings.get(Settings.key == 'backup_location').value
+    (space, total) = helpers.get_free_disk_space(backup)
     kwargs = {'experiments': exps, 'freespace': round(space, 2),
               'totalspace': round(total, 2),
               'percentage': round(float(space)/total*100, 2),
-              'drive': default_drive_path,
+              'drive': backup,
               'main': True,
               'reveal_modal': True,
-              'backup': base.get_setting('backup_location')}
+              'backup': backup}
     return render_template('exp_lists.html', **kwargs)
 
 
@@ -71,28 +85,20 @@ def main():
 def recurring_scripts():
     scripts = Scripts.select()
     filt_scripts = list(filter(lambda s: os.path.isfile(s.path), scripts))
-    if filt_scripts:
 
-        # tips = [backend.get_tool_tips(p[0]) for p in filt_scripts]
-
-        # filt_scripts = helpers.format_scripts(filt_scripts, tips)
-        kwargs = {'scripts': filt_scripts, 'main': False, 'reveal_modal': True}
-        return render_template('recurring_scripts.html', **kwargs)
-    else:
-        kwargs = {'scripts': None, 'main': False, 'reveal_modal': True}
-        return render_template('recurring_scripts.html', **kwargs)
+    kwargs = {'scripts': filt_scripts, 'main': False, 'reveal_modal': True}
+    return render_template('recurring_scripts.html', **kwargs)
 
 
 @app.route('/add_scripts', methods=['POST', 'get'])
 def add_scripts():
     if request.method == 'POST':
-        seconds_interval = helpers.hour2seconds(request.form['interval'])
         kwargs = {'path': request.form['filepath'],
                   'script_type': request.form['type'],
-                  'runtime_interval': seconds_interval,
+                  'runtime_interval': request.form['interval'],
                   'tooltip': request.form['tooltip']}
-        if helpers.file_exists(kwargs['fullfile']):
-            p, fi = os.path.splitext(kwargs['fullfile'])
+        if helpers.file_exists(kwargs['path']):
+            p, fi = os.path.splitext(kwargs['path'])
             kwargs['filename'] = fi
             Scripts.create(**kwargs)
             # base.add_recurring_script(**kwargs)  # to database
@@ -187,7 +193,8 @@ def main_add_watched_folder():
 def start_watching_folders():
 
     # get data backup path
-    backend.set_up_folders(Watched_Folder.select())
+    root_dir = Settings.get(Settings.key == 'backup_location')
+    backend.set_up_folders(Watched_Folder.select(), root_dir)
 
 
 if __name__ == "__main__":
