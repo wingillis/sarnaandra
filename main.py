@@ -43,7 +43,7 @@ def _db_close(exc):
 # begin watching folders for new files
 try:
     backend.set_up_folders(Watched_Folder.select(),
-                           Settings.get(Settings.key == 'backup_location'))
+                           Settings.get(Settings.key == 'backup_location').value)
 except DoesNotExist as e:
     print('No settings yet')
     _db_connect()
@@ -174,7 +174,7 @@ def main_add_watched_folder():
     path = request.form['folderpath']
     interval = float(request.form['timeInterval'])
     experiment = request.form['expname']
-    root_dir = Settings.get(key=='backup_location')
+    root_dir = Settings.get(Settings.key == 'backup_location')
     # there are 3 keys
     file_extensions = (len(list(request.form.keys())) - 3)/2
 
@@ -182,11 +182,14 @@ def main_add_watched_folder():
     extensions = ['extension' + str(num) for num in range(file_extensions)]
     dtype_vals = [request.form[t] for t in dtypes]
     extension_vals = [request.form[t] for t in extensions]
-    Watched_Folder.create(path=path, experiment_id=experiment, check_interval=interval)
-    Experiment.create(date_begin=datetime.datetime.now(), date_end=(datetime.datetime.now()+ datetime.timedelta(years=1)), file_filter=','.join(dtypes), name=experiment)
+    exp = Experiment.create(date_begin=datetime.datetime.now(), date_end=(datetime.datetime.now()+ datetime.timedelta(days=365)), file_filter=','.join(dtypes), name=experiment, ordering='backup_location,experiment,date,file_type')
+    print(exp)
+    print(exp.id)
+    print(exp.name)
+    Watched_Folder.create(path=path, experiment_id=exp.id, check_interval=interval)
     # base.add_experiment(experiment, ','.join(dtype_vals), path, interval)
     backend.add_watched_folder(path, interval,
-                               experiment, root_dir)
+                               experiment, root_dir, exp.ordering.split(','))
     return redirect('/')
 
 

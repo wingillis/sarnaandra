@@ -31,12 +31,12 @@ def set_up_folders(folder_class, root_dir):
     # watched_folders = db.get_watched_folders()
     # root_dir = db.get_setting('backup_location')
 
-    watched_folders = folder_class.select()
+    watched_folders = folder_class
     if watched_folders:
         for folder in watched_folders:
-            ordering = folder.experiment_id.ordering
+            ordering = folder.experiment_id.ordering.split(',')
             add_watched_folder(folder.path, folder.check_interval,
-                               folder.experiment_id, root_dir, ordering)
+                               folder.experiment_id.name, root_dir, ordering)
     else:
         print('Watched folders is empty. Maybe there is a new user')
 
@@ -79,7 +79,7 @@ def add_watched_folder(path, check_interval, experiment, root_dir, ordering):
         #     db.add_watched_folder(path, experiment, strtypes, check_interval)
 
         interval = IntervalTrigger(seconds=check_interval)
-        func = lambda: experiment_management.check_watched_files(path, experiment, 5, root_dir, )
+        func = lambda: experiment_management.check_watched_files(path, experiment, 5, root_dir, ordering)
         print('New watched folder has been added: {0}'.format(path))
         scheduler.add_job(func, interval)
         scheduler.print_jobs()

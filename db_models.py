@@ -14,7 +14,7 @@ class Base(Model):
 class Experiment(Base):
     # __tablename__ = 'experiments'
 
-    id = IntegerField(primary_key=True)
+    # id = IntegerField(primary_key=True)
     date_begin = DateTimeField()
     date_end = DateTimeField()
     file_filter = CharField()
@@ -26,7 +26,7 @@ class Experiment(Base):
 class Watched_Folder(Base):
     # __tablename__ = 'watched_folders'
 
-    id = IntegerField(primary_key=True)
+    # id = IntegerField(primary_key=True)
     path = CharField()
     experiment_id = ForeignKeyField(Experiment,
                                     related_name='experiment_folders')
@@ -45,7 +45,7 @@ class Settings(Base):
 class Scripts(Base):
     # __tablename__ = 'scripts'
 
-    id = IntegerField(primary_key=True)
+    # id = IntegerField(primary_key=True)
     filename = CharField()
     path = CharField()
     script_type = CharField()
