@@ -1,12 +1,12 @@
 {% extends "index.html" %}
 {% block body %}
 <!-- Go through a tuple of values -->
-{% for title, value in setting %}
+{% for setting in setting %}
     <div class="row">
-        <form action="/change_setting/{{title}}" method="post">
+        <form action="/change_setting/{{setting.key}}" method="post">
             <div class="large-10 medium-10 small-10 columns">
-                {{title}}
-                <input name="{{title}}" placeholder="{{title}}" type="text" value="{{value}}">
+                {{setting.key}}
+                <input name="{{setting.key}}" placeholder="{{setting.key}}" type="text" value="{{setting.value}}">
             </div>
             <div class="large-2 medium-2 small-2 columns">
                 <input type="submit" value="Change" class="button radius success">

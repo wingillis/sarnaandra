@@ -4,10 +4,10 @@
 <div class="row">
     {% for script in scripts %}
     <div class="large-4 medium-4 columns">
-        <p><span data-tooltip aria-haspopup="true" class="has-tip" title="{{script.tooltip}}">Name: {{script.name}}</span></p>
-        <p>Type: {{script.type}}</p>
-        <p>Time interval: {{script.interval}} seconds</p>
-        <a href="#" class="button success">Remove Script</a>
+        <p><span data-tooltip aria-haspopup="true" class="has-tip" title="{{script.tooltip}}">Name: {{script.filename}}</span></p>
+        <p>Type: {{script.script_type}}</p>
+        <p>Time interval: {{script.runtime_interval}} seconds</p>
+        <a href="#" class="button warning">Remove Script</a>
     </div>
     {% endfor %}
 </div>
@@ -25,6 +25,7 @@
                 <option value="py">py</option>
             </select>
             <br><br>
+            <input type="text" name="tooltip" placeholder="Tool tip on what this script does">
             <input type="number" step="any" name="interval" autocomplete="on" placeholder="interval (in hours)">
             <!--<span class="postfix">hrs</span>-->
             <input type="submit" id="subbut" class="button medium-12 large-12 radius" value="Add script">

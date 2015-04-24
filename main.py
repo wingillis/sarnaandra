@@ -1,25 +1,30 @@
 from flask import Flask, request, url_for, render_template, redirect, jsonify
-import data_database as db
+from db_models import *
 import helpers
 import os
 import webbrowser
 import threading
 import backend
 import make_database
-import functools
+import datetime
+import argparse
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument('production', default='no')
+arguments = parser.parse_args()
 
 default_drive_path = os.path.expanduser('~')
 
-production = False
+if arguments.production is 'production':
+    production = True
+else:
+    production = False
 
 # create an instance of the app
 app = Flask(__name__)
 
-# open the database
-base = db.Database()
-
-# should I check to see if this is the user's first time?
-make_database.run(base)
+# make_database.run(base)
 
 backend.begin()
 
@@ -31,9 +36,19 @@ backend.load_scripts(base)
 # the main page loads to a list of the experiments
 
 
+@app.before_request
+def _db_connect():
+    db.connect()
+
+
+@app.teardown_request
+def _db_close(exc):
+    if not db.is_closed():
+        db.close()
+
 @app.route("/")
 def main():
-    exps = base.get_all_experiments()
+    exps = Experiment.select()
     (space, total) = helpers.get_free_disk_space(default_drive_path)
     kwargs = {'experiments': exps, 'freespace': round(space, 2),
               'totalspace': round(total, 2),
@@ -45,22 +60,22 @@ def main():
     return render_template('exp_lists.html', **kwargs)
 
 
-@app.route("/add_experiment", methods=['post', 'get'])
-def add_exp():
-    if request.method == 'POST':
-        base.add_experiment(**request.form)
-    return redirect('/')
+# @app.route("/add_experiment", methods=['post', 'get'])
+# def add_exp():
+#     if request.method == 'POST':
+#         base.add_experiment(**request.form)
+#     return redirect('/')
 
 
 @app.route('/recurring_scripts', methods=['get'])
 def recurring_scripts():
-    scripts = base.get_recurring_scripts()
-    filt_scripts = list(filter(lambda s: helpers.file_exists(s[0]), scripts))
+    scripts = Scripts.select()
+    filt_scripts = list(filter(lambda s: os.path.isfile(s.path), scripts))
     if filt_scripts:
 
-        tips = [backend.get_tool_tips(p[0]) for p in filt_scripts]
+        # tips = [backend.get_tool_tips(p[0]) for p in filt_scripts]
 
-        filt_scripts = helpers.format_scripts(filt_scripts, tips)
+        # filt_scripts = helpers.format_scripts(filt_scripts, tips)
         kwargs = {'scripts': filt_scripts, 'main': False, 'reveal_modal': True}
         return render_template('recurring_scripts.html', **kwargs)
     else:
@@ -72,13 +87,17 @@ def recurring_scripts():
 def add_scripts():
     if request.method == 'POST':
         seconds_interval = helpers.hour2seconds(request.form['interval'])
-        kwargs = {'fullfile': request.form['filepath'],
-                  'type': request.form['type'],
-                  'interval': seconds_interval}
+        kwargs = {'path': request.form['filepath'],
+                  'script_type': request.form['type'],
+                  'runtime_interval': seconds_interval,
+                  'tooltip': request.form['tooltip']}
         if helpers.file_exists(kwargs['fullfile']):
-            base.add_recurring_script(**kwargs)  # to database
-            backend.add_recurring_script(kwargs['fullfile'],
-                                         kwargs['interval'])
+            p, fi = os.path.splitext(kwargs['fullfile'])
+            kwargs['filename'] = fi
+            Scripts.create(**kwargs)
+            # base.add_recurring_script(**kwargs)  # to database
+            backend.add_recurring_script(kwargs['path'],
+                                         kwargs['runtime_interval'])
         else:
             # alert user that file doesn't exist
             print('File does not exist')
@@ -129,7 +148,7 @@ def file_info(file_name):
 @app.route('/settings', methods=['get', 'post'])
 def settings():
     '''Displays the settings for the current user'''
-    settings = helpers.get_settings(base)
+    settings = Settings.select()
     return render_template('settings.html', setting=settings)
 
 
@@ -138,7 +157,9 @@ def change_setting(s_name=None):
     '''Quick implementation of settings change. May be able to be
     implemented differently. Updates setting variable in database'''
     if s_name:
-        base.update_settings(s_name, request.form[s_name])
+        s = Settings.get(Settings.key == s_name)
+        s.value = request.form[s_name]
+        s.save()
     return redirect('/settings')
 
 
@@ -150,12 +171,14 @@ def main_add_watched_folder():
     root_dir = base.get_setting('backup_location')
     # there are 3 keys
     file_extensions = (len(list(request.form.keys())) - 3)/2
-    # only for testing purposes remove this later
+
     dtypes = ['dtype' + str(num) for num in range(file_extensions)]
     extensions = ['extension' + str(num) for num in range(file_extensions)]
     dtype_vals = [request.form[t] for t in dtypes]
     extension_vals = [request.form[t] for t in extensions]
-    base.add_experiment(experiment, ','.join(dtype_vals), path, interval)
+    Watched_Folder.create(path=path, experiment_id=experiment, check_interval=interval)
+    Experiment.create(date_begin=datetime.datetime.now(), date_end=(datetime.datetime.now()+ datetime.timedelta(years=1)), file_filter=','.join(dtypes), name=experiment)
+    # base.add_experiment(experiment, ','.join(dtype_vals), path, interval)
     backend.add_watched_folder(path, interval,
                                experiment, root_dir,
                                zip(dtype_vals, extension_vals), db=base)
@@ -165,7 +188,7 @@ def main_add_watched_folder():
 def start_watching_folders():
 
     # get data backup path
-    backend.set_up_folders(base)
+    backend.set_up_folders(Watched_Folder.select())
 
 
 if __name__ == "__main__":
