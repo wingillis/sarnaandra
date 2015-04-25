@@ -174,7 +174,7 @@ def main_add_watched_folder():
     path = request.form['folderpath']
     interval = float(request.form['timeInterval'])
     experiment = request.form['expname']
-    root_dir = Settings.get(Settings.key == 'backup_location')
+    root_dir = Settings.get(Settings.key == 'backup_location').value
     # there are 3 keys
     file_extensions = (len(list(request.form.keys())) - 3)/2
 
