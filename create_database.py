@@ -1,4 +1,4 @@
 from db_models import *
 
-db.create_tables([Experiment, Watched_Folder, Settings, Scripts])
-
+db.create_tables([Experiment, WatchedFolder, Settings,
+                  Scripts, Files, ExperimentScripts])

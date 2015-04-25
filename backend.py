@@ -28,7 +28,6 @@ def begin():
 def set_up_folders(folder_class, root_dir):
     # each index of watched_folders contains a tuple of the
     # folder location, recurrence time and experiment
-    # watched_folders = db.get_watched_folders()
     # root_dir = db.get_setting('backup_location')
 
     watched_folders = folder_class
@@ -51,7 +50,7 @@ def print_jobs():
 def add_recurring_script(p, recurrence_time):
     '''adds a file (currently only python scripts)
         to be run once every recurrence_time (which is in seconds)'''
-    if helpers.file_exists(p):
+    if os.path.isfile(p):
         # scheduler.print_jobs()
         path, file = os.path.split(p)
         sys.path.append(path)
@@ -64,6 +63,8 @@ def add_recurring_script(p, recurrence_time):
         scheduler.print_jobs()
         return 0
     else:
+        print('script does not exist at location\
+               {0}\nadd file failed'.format(p))
         return 1
 
 

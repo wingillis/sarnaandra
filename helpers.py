@@ -88,57 +88,6 @@ def hour2seconds(hour):
     return seconds
 
 
-def format_scripts(script_list, tip):
-    '''given a list of script tuples from the database,
-    this adds each scipt to a structure to be properly shown in
-        the web browser'''
-
-    return [ScriptProperties(*s, tooltip=tip[i]) for i, s in enumerate(script_list)]
-
-
-def format_files(file_list):
-    ''':params list of files
-    :return FileProperties object list
-    These files are now formatted to use with jinja
-    '''
-    kwarg_file_list = map(make_file_kwargs, file_list)
-    f_files = list(map(lambda a: FileProperties(**a), kwarg_file_list))
-    return f_files
-
-
-def get_ordering(experiment, db):
-    ordering = db.get_experiment_ordering(experiment)
-    return ordering
-
-
-def get_settings(db):
-    settings = db.get_all_settings()
-    return settings
-
-
-def make_file_kwargs(file_list):
-    ''':params List of files (in tuple format)
-    '''
-    return_list = []
-    kwargs = {}
-    for file in file_list:
-        kwargs['date_added'] = file[0]
-        kwargs['date_modified'] = file[1]
-        kwargs['data_type'] = file[2]
-        kwargs['filesize'] = file[3]
-        kwargs['name'] = file[4]
-        kwargs['experiment'] = file[5]
-        kwargs['tags'] = file[6]
-        kwargs['additional_files'] = file[7]
-        return_list.append(kwargs)
-
-    return return_list
-
-
-def file_exists(path):
-    return os.path.isfile(path)
-
-
 def get_dirs_in_path(path):
     if not path and platform.system() == 'Windows':
         import win32api

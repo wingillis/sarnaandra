@@ -42,7 +42,7 @@ def _db_close(exc):
 
 # begin watching folders for new files
 try:
-    backend.set_up_folders(Watched_Folder.select(),
+    backend.set_up_folders(WatchedFolder.select(),
                            Settings.get(Settings.key == 'backup_location').value)
 except DoesNotExist as e:
     print('No settings yet')
@@ -72,13 +72,6 @@ def main():
               'reveal_modal': True,
               'backup': backup}
     return render_template('exp_lists.html', **kwargs)
-
-
-# @app.route("/add_experiment", methods=['post', 'get'])
-# def add_exp():
-#     if request.method == 'POST':
-#         base.add_experiment(**request.form)
-#     return redirect('/')
 
 
 @app.route('/recurring_scripts', methods=['get'])
@@ -186,7 +179,7 @@ def main_add_watched_folder():
     print(exp)
     print(exp.id)
     print(exp.name)
-    Watched_Folder.create(path=path, experiment_id=exp.id, check_interval=interval)
+    WatchedFolder.create(path=path, experiment_id=exp.id, check_interval=interval)
     # base.add_experiment(experiment, ','.join(dtype_vals), path, interval)
     backend.add_watched_folder(path, interval,
                                experiment, root_dir, exp.ordering.split(','))
@@ -197,7 +190,7 @@ def start_watching_folders():
 
     # get data backup path
     root_dir = Settings.get(Settings.key == 'backup_location')
-    backend.set_up_folders(Watched_Folder.select(), root_dir)
+    backend.set_up_folders(WatchedFolder.select(), root_dir)
 
 
 if __name__ == "__main__":

@@ -12,42 +12,53 @@ class Base(Model):
 
 
 class Experiment(Base):
-    # __tablename__ = 'experiments'
 
-    # id = IntegerField(primary_key=True)
     date_begin = DateTimeField()
     date_end = DateTimeField()
     file_filter = CharField()
     name = CharField()
     ordering = CharField()
-    # folder_paths = Column(String)
+    scripts_exist = BooleanField()
 
 
-class Watched_Folder(Base):
-    # __tablename__ = 'watched_folders'
+class WatchedFolder(Base):
 
-    # id = IntegerField(primary_key=True)
     path = CharField()
     experiment_id = ForeignKeyField(Experiment,
                                     related_name='experiment_folders')
     check_interval = IntegerField()  # interval in seconds
-
-    # experiment = relationship(Experiment)
+    preserve_folder_structure = BooleanField()
 
 
 class Settings(Base):
-    # __tablename__ = 'settings'
 
     key = CharField()
     value = CharField()
 
 
 class Scripts(Base):
-    # __tablename__ = 'scripts'
 
-    # id = IntegerField(primary_key=True)
     filename = CharField()
     path = CharField()
     script_type = CharField()
-    runtime_interval = IntegerField()  # to measure interval in seconds
+    runtime_interval = IntegerField()  # interval in seconds
     tooltip = TextField()
+
+
+class Files(Base):
+
+    file_name = CharField()
+    file_path = CharField()  # make sure that this is new, moved path
+    file_type = CharField()
+    associated_figures = TextField()
+    starred = BooleanField()
+    experiment_id = ForeignKeyField(Experiment, related_name='experiment')
+
+
+class ExperimentScripts(Base):
+
+    file_path = CharField()  # make sure it is moved path (copied file)
+    experiment_id = ForeignKeyField(Experiment, related_name='experiment')
+    save_raw_data = BooleanField()
+    save_processed_data = BooleanField()
+    file_filter = CharField()
