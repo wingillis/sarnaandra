@@ -2,11 +2,13 @@
 {% block body %}
 <div class="row">
 {% for item in experiments %}
-    <div class="large-3 medium-3 small-3 columns">
-        <p>{{item.name}}</p>
-        <p>Created: {{item.date_begin}}</p>
-        <p>Projected End Date {{item.date_end}}</p>
+    <a href="/exp/{{item.name}}/1" style="color: #222;">
+    <div class="large-4 medium-4 small-4 columns">
+        <p><b class="red-color">{{item.name}}</b></p>
+        <p>Created: {{item.date_begin.strftime('%b %d, %Y')}}</p>
+        <p>Projected End Date: {{item.date_end.strftime('%b %d, %Y')}}</p>
     </div>
+    </a>
 {% endfor %}
 </div>
 {% if reveal_modal %}

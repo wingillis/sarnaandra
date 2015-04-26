@@ -18,3 +18,29 @@
 	height: 350px;
 	max-height: 350px;
 }
+
+.spaced {
+    padding: 10px;
+}
+
+/*div.inner-wrap {
+    height: 100%;
+    min-height: 100%;
+}
+
+div.off-canvas-wrap {
+    height: 100%;
+    min-height: 100%;
+}*/
+
+.red-color {
+    color: rgb(183,0,82);
+}
+
+.red-color:hover {
+    color: rgb(107,0,48);
+}
+
+p {
+    margin-bottom: 5px;
+}

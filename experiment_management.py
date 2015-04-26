@@ -5,24 +5,28 @@ import shutil
 import toolz
 import functools
 import helpers
+import main
 
 
 def check_watched_files(path, experiment, padding_time, move_path, ordering):
     files = glob.glob(os.path.join(path, '*'))
     now = datetime.datetime.now()
     td = datetime.timedelta(minutes=padding_time)
-    # ordering = helpers.get_ordering(experiment, db)
     if not os.path.exists(move_path):
         os.makedirs(move_path)
+    main._db_connect()
     for f in files:
         try:
             t = os.path.getmtime(f)
             t = datetime.datetime.fromtimestamp(t)
             fpath, ext = os.path.splitext(f)
+            fname = os.path.basename(f)
             if (now - td) > t:
                 # do whatever here now
                 ext = ext[1:]
                 path = generate_file_path(move_path, experiment, ordering, ext)
+
+                main.Files.create(file_name=fname, file_path=path, file_type=ext, discovered_date=datetime.datetime.now(), starred=False, experiment_id=main.Experiment.get(main.Experiment.name == experiment).id)
                 if path:
                     print('Moving file to {0}'.format(path))
                     if os.path.exists(path):
@@ -37,7 +41,7 @@ def check_watched_files(path, experiment, padding_time, move_path, ordering):
         except OSError as e:
             os.remove(f)
             print('Removing {0} because of symlink problem'.format(f))
-
+    main._db_close(' ')
 
 
 def generate_file_path(backup_location, exp, ordering, file_type):

@@ -26,4 +26,5 @@ if __name__ == '__main__':
             f.write(letter_choice1*ocurrences1)
             f.write('\n')
             f.write(letter_choice2*ocurrences2)
+            print('wrote file {0}'.format(filename))
         time.sleep(6)

@@ -25,12 +25,10 @@ def begin():
     scheduler.start()
 
 
-def set_up_folders(folder_class, root_dir):
+def set_up_folders(watched_folders, root_dir):
     # each index of watched_folders contains a tuple of the
     # folder location, recurrence time and experiment
-    # root_dir = db.get_setting('backup_location')
-
-    watched_folders = folder_class
+    watched_folders = list(watched_folders)
     if watched_folders:
         for folder in watched_folders:
             ordering = folder.experiment_id.ordering.split(',')
@@ -70,23 +68,18 @@ def add_recurring_script(p, recurrence_time):
 
 def add_watched_folder(path, check_interval, experiment, root_dir, ordering):
     # path, interval and experiment are parameters for apscheduler
-
+    def check_files():
+        experiment_management.check_watched_files(path, experiment,
+                                                  2, root_dir, ordering)
     # check if folder exists in the path
     if os.path.isdir(path):
-        # do what is needed
-        # add folder to database if it isn't already there
-        # if add_db:
-        #     strtypes = ','.join(map(lambda a: ','.join(a), file_types))
-        #     db.add_watched_folder(path, experiment, strtypes, check_interval)
-
         interval = IntervalTrigger(seconds=check_interval)
-        func = lambda: experiment_management.check_watched_files(path, experiment, 5, root_dir, ordering)
         print('New watched folder has been added: {0}'.format(path))
-        scheduler.add_job(func, interval)
-        scheduler.print_jobs()
+        scheduler.add_job(check_files, interval)
     else:
         # notify user that path doesn't exist
-        print('Error! The path you mentioned:\n{0}\ndoesn\'t exist!'.format(path))
+        print('Error! The path you mentioned:\n{0}\ndoesn\'t exist!'
+              .format(path))
         # if implemented, check for other means of notification
 
 

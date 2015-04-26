@@ -4,6 +4,7 @@ import os
 import platform
 import sys
 import toolz
+from db_models import Files
 
 __author__ = 'wgillis'
 
@@ -24,31 +25,11 @@ class DiskSpace(object):
         return (self.spaceAvailable, self.totalSpace)
 
 
-class ScriptProperties(object):
-    '''Attributes of each script formatted for the
-    UI'''
-    def __init__(self, filename, script_type, time_interval, tooltip):
-        self.name = filename
-        self.type = script_type
-        self.interval = time_interval
-        self.tooltip = tooltip
-
-
-class FileProperties(object):
-    '''Attributes of each file for use in the
-    experiment files view'''
-    def __init__(self, **kwargs):
-        self.date_added = kwargs['date_added']
-        self.date_modified = kwargs['date_modified']
-        self.data_type = kwargs['data_type']
-        self.filesize = kwargs['filesize']
-        self.name = kwargs['name']
-        self.experiment = kwargs['experiment']
-        self.tags = kwargs['tags']
-        self.additional_files = kwargs['additional_files']
-
-
 mainDisk = DiskSpace()
+
+
+def get_File_Class():
+    return Files
 
 
 def get_date():
@@ -88,43 +69,42 @@ def hour2seconds(hour):
     return seconds
 
 
-def get_dirs_in_path(path):
+def chunks(iterable, n):
+    l = list(iterable)
+    for i in range(0, len(l), n):
+        yield tuple(l[i:i+n])
+
+
+def get_dirs_and_files_in_path(path):
+
+    # filter function
+    def func(a): return os.path.isdir(a)
+    # gives the opposite results as above
+    func_ = toolz.complement(func)
+
     if not path and platform.system() == 'Windows':
         import win32api
         drives = win32api.GetLogicalDriveStrings()
         drives = [d for d in drives.split('\000') if d]
         return drives
-    try:
-        fs = os.listdir(path)
-        directories = [s for s in fs if os.path.isdir(os.path.join(path, s))]
-    except Exception as e:
-        print('Exception occurred')
-        print(e)
+
+    elif os.path.exists(path):
+        r = os.listdir(path)
+        f = map(lambda a: os.path.join(path, a), r)
+        dirs = filter(func, f)
+        files = filter(func_, f)
+
+    else:
         try:
             head, tail = os.path.split(path)
-            fs = os.listdir(head)
-            directories = filter(lambda a: a.lower().startswith(tail.lower()), fs)
-            directories = list(filter(lambda a:
-                               os.path.isdir(os.path.join(head, a)), directories))
-        except:
-            return None
-    return directories
+            r = os.listdir(head)
+            filtered_everything = filter(lambda a: a.startswith(tail), r)
+            filtered_everything = map(lambda a: os.path.join(head, a), filtered_everything)
+            dirs = filter(func, filtered_everything)
+            files = filter(func_, filtered_everything)
 
-
-def get_files_in_path(path):
-    if path:
-        try:
-            fs = os.listdir(path)
-            directories = [s for s in fs if not os.path.isdir(os.path.join(path, s))]
         except Exception as e:
-            print('Exception occurred')
-            print(e)
-            try:
-                head, tail = os.path.split(path)
-                fs = os.listdir(head)
-                directories = filter(lambda a: a.lower().startswith(tail.lower()), fs)
-                directories = filter(lambda a:
-                                     not os.path.isdir(os.path.join(head, a)), directories)
-            except:
-                return None
-        return list(toolz.take(100, directories))
+            print('{0} doesn\'t even exist you stupid'.format(head))
+            return None
+
+    return (toolz.take(100, dirs), toolz.take(100, files))

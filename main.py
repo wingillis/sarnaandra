@@ -8,25 +8,22 @@ import backend
 import make_database
 import datetime
 import argparse
+import platform
+from subprocess import call as subcall
 
-
-parser = argparse.ArgumentParser()
-parser.add_argument('production', nargs='?')
-arguments = parser.parse_args()
 
 default_drive_path = os.path.expanduser('~')
 
-if arguments.production is 'production':
-    production = True
-else:
-    production = False
+# if arguments.production is 'production':
+#     production = True
+# else:
 
 # create an instance of the app
 app = Flask(__name__)
 
 # make_database.run(base)
 
-backend.begin()
+
 
 
 @app.before_request
@@ -41,21 +38,9 @@ def _db_close(exc):
 
 
 # begin watching folders for new files
-try:
-    backend.set_up_folders(WatchedFolder.select(),
-                           Settings.get(Settings.key == 'backup_location').value)
-except DoesNotExist as e:
-    print('No settings yet')
-    _db_connect()
-    tempp = helpers.generate_default_backup(default_drive_path)
-    Settings.create(key='backup_location',
-                    value=tempp)
-    if not os.path.exists(tempp):
-        os.makedirs(tempp)
-    print('Generated default backup location')
-    _db_close(' ')
+
 # load recurring scripts already programmed into the system
-backend.load_scripts(Scripts.select())
+
 # the main page loads to a list of the experiments
 
 
@@ -90,7 +75,7 @@ def add_scripts():
                   'script_type': request.form['type'],
                   'runtime_interval': request.form['interval'],
                   'tooltip': request.form['tooltip']}
-        if helpers.file_exists(kwargs['path']):
+        if os.path.isfile(kwargs['path']):
             p, fi = os.path.splitext(kwargs['path'])
             kwargs['filename'] = fi
             Scripts.create(**kwargs)
@@ -109,30 +94,33 @@ def get_next_dirs():
     path = request.args.get('path')
     paths = {}
     if path == '__base__':
-        fullpath = os.path.expanduser('~')
-        dir_list = helpers.get_dirs_in_path(fullpath)
+        path = os.path.expanduser('~')
+        t, f = helpers.get_dirs_and_files_in_path(path)
         paths['first'] = True
     else:
-        dir_list = helpers.get_dirs_in_path(path)
+        t, f = helpers.get_dirs_and_files_in_path(path)
         fullpath = path
         paths['first'] = False
-    paths['files'] = helpers.get_files_in_path(fullpath)
-    paths['paths'] = dir_list
-    paths['fullpath'] = fullpath
+    paths['files'] = list(f)
+    paths['paths'] = list(t)
+    paths['fullpath'] = path
     return jsonify(**paths)
 
 
-@app.route('/exp/<experiment_name>', methods=['get'])
-def see_exp(experiment_name):
+@app.route('/exp/<experiment_name>/<page>', methods=['get'])
+def see_exp(experiment_name, page=1):
     '''An experiment is selected from the main page and
     the result is given as a variable on this page. This
     page shows the files associated with this experiment'''
 
-    files = base.get_experiment_files(experiment_name)
-    formatted_files = helpers.format_files(files)
-    kwargs = {'files': formatted_files}
+    files = Files.select().join(Experiment).where(Experiment.name == experiment_name).paginate(int(page), 100)
 
-    return 'Experiment name: {0}'.format(experiment_name)
+    # structure the files to be two-pair tuples
+    file_struct = helpers.chunks(files.iterator(), 2)
+
+    # kwargs = {'files': files}
+
+    return render_template("experiment_view.html", files=file_struct, page=int(page), expname=experiment_name)
 
 
 @app.route('/file/<file_name>', methods=['get'])
@@ -175,25 +163,46 @@ def main_add_watched_folder():
     extensions = ['extension' + str(num) for num in range(file_extensions)]
     dtype_vals = [request.form[t] for t in dtypes]
     extension_vals = [request.form[t] for t in extensions]
-    exp = Experiment.create(date_begin=datetime.datetime.now(), date_end=(datetime.datetime.now()+ datetime.timedelta(days=365)), file_filter=','.join(dtypes), name=experiment, ordering='backup_location,experiment,date,file_type')
-    print(exp)
-    print(exp.id)
-    print(exp.name)
-    WatchedFolder.create(path=path, experiment_id=exp.id, check_interval=interval)
+    exp = Experiment.create(date_begin=datetime.datetime.now(), date_end=(datetime.datetime.now()+ datetime.timedelta(days=365)), file_filter=','.join(dtypes), name=experiment, ordering='backup_location,experiment,date,file_type', scripts_exist=False)
+    WatchedFolder.create(path=path, experiment_id=exp.id, check_interval=interval, preserve_folder_structure=False)
     # base.add_experiment(experiment, ','.join(dtype_vals), path, interval)
     backend.add_watched_folder(path, interval,
                                experiment, root_dir, exp.ordering.split(','))
     return redirect('/')
 
 
+@app.route('/show/<filepath>')
+def show(filepath=None):
+    if platform.system() == 'Windows':
+        subcall(['explorer', filepath])
+    else:
+        subcall(['open', '-R', filepath])
+
+
 def start_watching_folders():
 
     # get data backup path
-    root_dir = Settings.get(Settings.key == 'backup_location')
-    backend.set_up_folders(WatchedFolder.select(), root_dir)
+    try:
+        backend.set_up_folders(WatchedFolder.select(),
+                               Settings.get(
+                               Settings.key == 'backup_location').value)
+    except DoesNotExist as e:
+        print('No settings yet')
+        _db_connect()
+        tempp = helpers.generate_default_backup(default_drive_path)
+        Settings.create(key='backup_location',
+                        value=tempp)
+        if not os.path.exists(tempp):
+            os.makedirs(tempp)
+        print('Generated default backup location')
+        _db_close(' ')
 
 
 if __name__ == "__main__":
+    production = False
+    parser = argparse.ArgumentParser()
+    parser.add_argument('production', nargs='?')
+    arguments = parser.parse_args()
 
     if production:
         threading.Timer(1.25,
@@ -201,6 +210,8 @@ if __name__ == "__main__":
                         ).start()
     else:
         app.debug = True
+    backend.begin()
+    backend.load_scripts(Scripts.select())
     start_watching_folders()
 
     app.run()

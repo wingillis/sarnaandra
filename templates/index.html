@@ -5,7 +5,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.1/css/foundation.min.css">
 
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.1/css/normalize.min.css">
-    <link rel="stylesheet" type="text/css" href="static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
     <title>Sarnaandra</title>
 </head>
 <body>
@@ -14,7 +14,7 @@
         <nav class="tab-bar">
             <section class="left-small"><a class="left-off-canvas-toggle menu-icon"><span></span></a></section>
             <section class="middle tab-bar-section">
-                <h1 class="title">Sarnaandra</h1>
+                <h1 class="title">SARNAANDRA</h1>
             </section>
         </nav>
         <aside class="left-off-canvas-menu">
@@ -23,8 +23,6 @@
                     <label>Sarnaandra</label>
                 </li>
                 <li><a href="/">Experiments</a></li>
-                <li><a href="#">Last Experiment</a></li>
-                <li><a href="#">Close database connection</a></li>
                 <li><label>General</label></li>
                 <li><a href="/recurring_scripts">Recurring scripts</a> </li>
                 <li>
@@ -35,8 +33,8 @@
         </aside>
         <section class="main-section">
             <div class="row">
-                <div class="medium-12 columns app-title">
-                    <h2>Sarnaandra</h2>
+                <div class="medium-12 large-12 small-12 columns app-title">
+                    <h2>SARNAANDRA</h2>
                     {% if main %}
                     <br>
                     <span id="diskSpaceSpan">You have {{freespace}}GB free out of {{totalspace}}GB ({{percentage}}%) in hard drive: {{drive}}</span>
@@ -44,9 +42,17 @@
                     <div class="progress large-12 radius success center" id="diskSpace">
                         <span class="meter app-title" style="width: {{100 - percentage}}%"></span>
                     </div>
-                    <h3>Experiment organization location: {{backup}}</h3>
+                    <div class="row">
+                        <div class="medium-10 columns">
+                        <h5>Experiment organization location: {{backup}}</h5>
+                        </div>
+                        <div class="medium-2 columns">
+                        <a href="/settings" class="label warning">change</a>
+                        </div>
+                        </div>
                     {% endif %}
                     {% if reveal_modal %}
+                    <br>
                     <a href="#" data-reveal-id="myModal" class="button">Add folder/script/experiment</a>
                     {% endif %}
                 </div>
@@ -63,7 +69,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.1/js/vendor/modernizr.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.1/js/foundation.min.js"></script>
 
-<script src="static/js/main.js"></script>
+<script src="/static/js/main.js"></script>
 {% block scripts %}
 
 {% endblock %}

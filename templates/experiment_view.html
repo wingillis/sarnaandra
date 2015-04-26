@@ -1,0 +1,24 @@
+{% extends "index.html" %}
+{% block body %}
+<div class="row">
+    {% if page != 1 %}
+        <a href="/exp/{{expname}}/{{page-1}}" class="button left">Previous Page</a>
+    {% endif %}
+        <a href="/exp/{{expname}}/{{page+1}}" class="button right">Next page</a>
+</div>
+{% for file_group in files %}
+<div class="row">
+    {% for file in file_group %}
+    <div class="medium-6 large-6 small-6 columns spaced">
+    <p>{{file.file_name}} is type {{file.file_type}} discovered on {{file.discovered_date}}</p>
+    <a href="/show/{{file.file_path}}">Show in finder</a>
+    {% if file.associated_figures %}
+    {% for img in file.associated_figures.split(',') %}
+    <img src="{{img}}"/>
+    {% endfor %}
+    {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endfor %}
+{% endblock %}

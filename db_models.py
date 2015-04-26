@@ -6,6 +6,15 @@ db_path = os.path.join(os.path.expanduser('~'), 'data_management.db')
 db = SqliteDatabase(db_path)
 
 
+def db_connect():
+    db.connect()
+
+
+def db_close():
+    if not db.is_closed():
+        db.close()
+
+
 class Base(Model):
     class Meta:
         database = db
@@ -50,15 +59,16 @@ class Files(Base):
     file_name = CharField()
     file_path = CharField()  # make sure that this is new, moved path
     file_type = CharField()
-    associated_figures = TextField()
+    discovered_date = DateTimeField()
+    associated_figures = TextField(null=True)  # list of file paths
     starred = BooleanField()
-    experiment_id = ForeignKeyField(Experiment, related_name='experiment')
+    experiment_id = ForeignKeyField(Experiment, related_name='experiment_files')
 
 
 class ExperimentScripts(Base):
 
     file_path = CharField()  # make sure it is moved path (copied file)
-    experiment_id = ForeignKeyField(Experiment, related_name='experiment')
+    experiment_id = ForeignKeyField(Experiment, related_name='experiment_scripts')
     save_raw_data = BooleanField()
     save_processed_data = BooleanField()
     file_filter = CharField()
