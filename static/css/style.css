@@ -47,10 +47,6 @@ p {
 
 .file-select {
     padding: 15px;
-    border-color: #DDD;
-    border-width: 3px;
-    border-style: solid;
-    border-radius: 2px;
 }
 
 .file-select:hover {
