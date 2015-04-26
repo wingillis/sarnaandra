@@ -9,6 +9,7 @@ import main
 import importlib
 import itertools
 import sys
+import time
 
 def check_watched_files(path, experiment, padding_time, move_path, ordering, watched_folder_id):
     files = glob.glob(os.path.join(path, '*'))
@@ -35,16 +36,20 @@ def check_watched_files(path, experiment, padding_time, move_path, ordering, wat
                         fp = put_in_path(script.file_path)
                         sc = importlib.import_module(fp)
                         newfilepaths = sc.run(f)
-                        if type(newfilepaths) is not str:
-                            pps = itertools.chain(*newfilepaths)
-                            [assoc_figs.append(ps) for ps in pps]
+                        print(type(newfilepaths))
+                        if (type(newfilepaths) is type(tuple)) or (type(newfilepaths) is type(list)):
+                            print('In chain one')
+                            [assoc_figs.append(ps) for ps in newfilepaths]
                         else:
+                            print('In string one')
                             assoc_figs.append(newfilepaths)
+                # time.sleep(20)
                 imgpath = os.path.join(path, 'images')
                 if not os.path.exists(imgpath):
                     os.makedirs(imgpath)
                 save_img_paths = []
                 for p in assoc_figs:
+                    print(p)
                     newpath = move_or_change_name(p, imgpath)
                     save_img_paths.append(newpath)
 
@@ -65,7 +70,9 @@ def check_watched_files(path, experiment, padding_time, move_path, ordering, wat
 
 def move_or_change_name(path, newpath):
     base = os.path.basename(path)
+    print('Base: {0}'.format(base))
     file_name, ext = os.path.splitext(base)
+    print('File name: {0}'.format(file_name))
     counter = -1
 
     def tp(fname, ext, p, c=None):
@@ -77,7 +84,7 @@ def move_or_change_name(path, newpath):
     while os.path.exists(temp_path):
         counter += 1
         temp_path = tp(file_name, ext, newpath, counter)
-
+    print(temp_path)
     shutil.move(path, temp_path)
     return temp_path
 

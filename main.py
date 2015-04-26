@@ -210,12 +210,10 @@ def start_watching_folders():
 
 
 if __name__ == "__main__":
-    production = False
     parser = argparse.ArgumentParser()
     parser.add_argument('production', nargs='?')
     arguments = parser.parse_args()
-
-    if production:
+    if arguments.production == 'p':
         threading.Timer(1.25,
                         lambda: webbrowser.open('http://127.0.0.1:5000')
                         ).start()
