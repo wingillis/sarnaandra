@@ -16,7 +16,6 @@ logging.basicConfig()
 scheduler = None
 
 running_scripts = {}
-tool_tips = {}
 
 
 def begin():
@@ -33,7 +32,7 @@ def set_up_folders(watched_folders, root_dir):
         for folder in watched_folders:
             ordering = folder.experiment_id.ordering.split(',')
             add_watched_folder(folder.path, folder.check_interval,
-                               folder.experiment_id.name, root_dir, ordering)
+                               folder.experiment_id.name, root_dir, ordering, folder.id)
     else:
         print('Watched folders is empty. Maybe there is a new user')
 
@@ -53,7 +52,6 @@ def add_recurring_script(p, recurrence_time):
         path, file = os.path.split(p)
         sys.path.append(path)
         library = importlib.import_module(file[:-3])
-        tool_tips[p] = library.run.__doc__
         print('Importing module {1} from {0}'.format(path, file))
         interval = IntervalTrigger(seconds=int(recurrence_time))
         if p not in running_scripts:
@@ -66,11 +64,11 @@ def add_recurring_script(p, recurrence_time):
         return 1
 
 
-def add_watched_folder(path, check_interval, experiment, root_dir, ordering):
+def add_watched_folder(path, check_interval, experiment, root_dir, ordering, wid):
     # path, interval and experiment are parameters for apscheduler
     def check_files():
         experiment_management.check_watched_files(path, experiment,
-                                                  2, root_dir, ordering)
+                                                  2, root_dir, ordering, wid)
     # check if folder exists in the path
     if os.path.isdir(path):
         interval = IntervalTrigger(seconds=check_interval)
@@ -87,14 +85,6 @@ def remove_recurring_task(path):
     scheduler.remove_job(running_scripts[path])
     running_scripts.pop(path)
     return 0
-
-
-def get_tool_tips(path):
-    # do better managing of tool tip presence
-    if tool_tips[path]:
-        return tool_tips[path]
-    else:
-        return None
 
 
 def load_scripts(scripts):

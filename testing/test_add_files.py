@@ -6,7 +6,7 @@ path = '~'
 
 path = os.path.expanduser(path)
 
-path = os.path.join(path, 'desktop', 'testing')
+path = os.path.join(path, 'Desktop', 'testing2')
 
 extension_choices = ['wav', 'txt', 'mov', 'img', 'ephys']
 

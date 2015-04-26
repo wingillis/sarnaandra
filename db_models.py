@@ -72,3 +72,4 @@ class ExperimentScripts(Base):
     save_raw_data = BooleanField()
     save_processed_data = BooleanField()
     file_filter = CharField()
+    watched_folder_id = ForeignKeyField(WatchedFolder, related_name='watched_folder_id')

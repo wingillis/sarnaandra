@@ -1,11 +1,10 @@
-from flask import Flask, request, url_for, render_template, redirect, jsonify
+from flask import Flask, request, url_for, render_template, redirect, jsonify, send_file
 from db_models import *
 import helpers
 import os
 import webbrowser
 import threading
 import backend
-import make_database
 import datetime
 import argparse
 import platform
@@ -22,8 +21,6 @@ default_drive_path = os.path.expanduser('~')
 app = Flask(__name__)
 
 # make_database.run(base)
-
-
 
 
 @app.before_request
@@ -76,7 +73,7 @@ def add_scripts():
                   'runtime_interval': request.form['interval'],
                   'tooltip': request.form['tooltip']}
         if os.path.isfile(kwargs['path']):
-            p, fi = os.path.splitext(kwargs['path'])
+            fi = os.path.basename(kwargs['path'])
             kwargs['filename'] = fi
             Scripts.create(**kwargs)
             # base.add_recurring_script(**kwargs)  # to database
@@ -113,23 +110,23 @@ def see_exp(experiment_name, page=1):
     the result is given as a variable on this page. This
     page shows the files associated with this experiment'''
 
-    files = Files.select().join(Experiment).where(Experiment.name == experiment_name).paginate(int(page), 100)
+    files = Files.select().join(Experiment).where(Experiment.name == experiment_name).order_by(Files.discovered_date.desc()).paginate(int(page), 45)
 
     # structure the files to be two-pair tuples
-    file_struct = helpers.chunks(files.iterator(), 2)
+    file_struct = helpers.chunks(files.iterator(), 3)
 
     # kwargs = {'files': files}
 
     return render_template("experiment_view.html", files=file_struct, page=int(page), expname=experiment_name)
 
 
-@app.route('/file/<file_name>', methods=['get'])
-def file_info(file_name):
-    '''Given the path of the file and the filename,
-    this function gives back all the information for
-    that one file'''
+# @app.route('/file/<file_name>', methods=['get'])
+# def file_info(file_name):
+#     '''Given the path of the file and the filename,
+#     this function gives back all the information for
+#     that one file'''
 
-    return 'File information view not implemented yet'
+#     return 'File information view not implemented yet'
 
 
 @app.route('/settings', methods=['get', 'post'])
@@ -163,20 +160,34 @@ def main_add_watched_folder():
     extensions = ['extension' + str(num) for num in range(file_extensions)]
     dtype_vals = [request.form[t] for t in dtypes]
     extension_vals = [request.form[t] for t in extensions]
-    exp = Experiment.create(date_begin=datetime.datetime.now(), date_end=(datetime.datetime.now()+ datetime.timedelta(days=365)), file_filter=','.join(dtypes), name=experiment, ordering='backup_location,experiment,date,file_type', scripts_exist=False)
-    WatchedFolder.create(path=path, experiment_id=exp.id, check_interval=interval, preserve_folder_structure=False)
+    exp = Experiment.create(date_begin=datetime.datetime.now(), date_end=(datetime.datetime.now() + datetime.timedelta(days=365)), file_filter=','.join(dtypes), name=experiment, ordering='backup_location,experiment,date,file_type', scripts_exist=False)
+    wfol = WatchedFolder.create(path=path, experiment_id=exp.id, check_interval=interval, preserve_folder_structure=False)
+    ExperimentScripts.create(file_path=extension_vals[0], experiment_id=exp.id, save_raw_data=True, save_processed_data=False, file_filter=dtype_vals[0], watched_folder_id=wfol.id)
     # base.add_experiment(experiment, ','.join(dtype_vals), path, interval)
     backend.add_watched_folder(path, interval,
-                               experiment, root_dir, exp.ordering.split(','))
+                               experiment, root_dir, exp.ordering.split(','), wfol.id)
     return redirect('/')
 
 
-@app.route('/show/<filepath>')
-def show(filepath=None):
+@app.route('/show')
+def show():
+    filepath = request.args.get('path')
     if platform.system() == 'Windows':
         subcall(['explorer', filepath])
+    elif platform.system() == 'Linux':
+        subcall(['xdg-open', filepath])
     else:
         subcall(['open', '-R', filepath])
+    return redirect(request.referrer)
+
+
+@app.route('/getpic/<fid>/<index>')
+@app.route('/getpic/<fid>/<index>-th')
+def send_pic(fid=None, index=None):
+    figs = Files.get(Files.id == fid).associated_figures
+    fpath = figs.split(',')[int(index)-1]
+    _, ext = os.path.splitext(fpath)
+    return send_file(fpath, mimetype='image/{0}'.format(ext[1:]))
 
 
 def start_watching_folders():
