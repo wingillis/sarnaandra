@@ -1,7 +1,7 @@
 import os
 from peewee import *
 
-db_path = os.path.join(os.path.expanduser('~'), 'data_management.db')
+db_path = os.path.join(os.path.expanduser('~'), 'sarnaandra', 'data_management.db')
 
 db = SqliteDatabase(db_path)
 

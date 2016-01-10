@@ -22,6 +22,7 @@ class DiskSpace(object):
         self.updated = True
 
     def get_space(self):
+        # returns space available and total space
         return (self.spaceAvailable, self.totalSpace)
 
 
@@ -76,11 +77,10 @@ def chunks(iterable, n):
 
 
 def get_dirs_and_files_in_path(path):
-
     # filter function
-    def func(a): return os.path.isdir(a)
+    def isdir(a): return os.path.isdir(a)
     # gives the opposite results as above
-    func_ = toolz.complement(func)
+    not_isdir = toolz.complement(isdir)
 
     if not path and platform.system() == 'Windows':
         import win32api
@@ -91,8 +91,8 @@ def get_dirs_and_files_in_path(path):
     elif os.path.exists(path):
         r = os.listdir(path)
         f = map(lambda a: os.path.join(path, a), r)
-        dirs = filter(func, f)
-        files = filter(func_, f)
+        dirs = filter(isdir, f)
+        files = filter(not_isdir, f)
 
     else:
         try:
@@ -100,8 +100,8 @@ def get_dirs_and_files_in_path(path):
             r = os.listdir(head)
             filtered_everything = filter(lambda a: a.startswith(tail), r)
             filtered_everything = map(lambda a: os.path.join(head, a), filtered_everything)
-            dirs = filter(func, filtered_everything)
-            files = filter(func_, filtered_everything)
+            dirs = filter(isdir, filtered_everything)
+            files = filter(not_isdir, filtered_everything)
 
         except Exception as e:
             print('{0} doesn\'t even exist you stupid'.format(head))

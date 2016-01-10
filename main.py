@@ -43,6 +43,8 @@ def _db_close(exc):
 
 @app.route("/")
 def main():
+    '''the main page, displays all the experiments, total space of the computer
+    drive, and where the backup location is'''
     exps = Experiment.select()
     backup = Settings.get(Settings.key == 'backup_location').value
     (space, total) = helpers.get_free_disk_space(backup)
@@ -58,6 +60,7 @@ def main():
 
 @app.route('/recurring_scripts', methods=['get'])
 def recurring_scripts():
+    '''shows where all the scripts are located'''
     scripts = Scripts.select()
     filt_scripts = list(filter(lambda s: os.path.isfile(s.path), scripts))
 

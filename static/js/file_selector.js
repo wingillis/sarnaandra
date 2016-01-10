@@ -22,16 +22,16 @@ var change_select_field = function(data) {
 };
 
 filepath_input.addEventListener('input', function() {
-	$.ajax({url:'/filepath', 
-		data: {path:filepath_input.value}, 
+	$.ajax({url:'/filepath',
+		data: {path:filepath_input.value},
 		success: change_select_field});
 });
 
 var update_select_field = function() {
-		$.ajax({url:'/filepath', 
-		data: {path:filepath_input.value}, 
+		$.ajax({url:'/filepath',
+		data: {path:filepath_input.value},
 		success: change_select_field});
-}
+};
 
 // $('#file_select').change(function() {
 // 	var folder = $('#file_select option:selected').text();
@@ -39,6 +39,6 @@ var update_select_field = function() {
 // 	update_select_field();
 // });
 
-$.ajax({url:'/filepath', 
-		data: {path:'__base__'}, 
+$.ajax({url:'/filepath',
+		data: {path:'__base__'},
 		success: change_select_field});
