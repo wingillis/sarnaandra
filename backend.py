@@ -16,6 +16,7 @@ logging.basicConfig()
 scheduler = None
 
 running_scripts = {}
+watched_folders = {}
 
 
 def begin():
@@ -65,15 +66,17 @@ def add_recurring_script(p, recurrence_time):
 
 
 def add_watched_folder(path, check_interval, experiment, root_dir, ordering, wid):
+    global watched_folders
     # path, interval and experiment are parameters for apscheduler
     def check_files():
+        # the 2 represents padding time
         experiment_management.check_watched_files(path, experiment,
                                                   2, root_dir, ordering, wid)
     # check if folder exists in the path
     if os.path.isdir(path):
         interval = IntervalTrigger(seconds=check_interval)
         print('New watched folder has been added: {0}'.format(path))
-        scheduler.add_job(check_files, interval)
+        watched_folders[path] = scheduler.add_job(check_files, interval)
     else:
         # notify user that path doesn't exist
         print('Error! The path you mentioned:\n{0}\ndoesn\'t exist!'
@@ -86,6 +89,11 @@ def remove_recurring_task(path):
     running_scripts.pop(path)
     return 0
 
+
+def remove_folder(path):
+    scheduler.remove_job(watched_folders[path])
+    watched_folders.pop(path)
+    return 0
 
 def load_scripts(scripts):
     # scripts = db.get_recurring_scripts()

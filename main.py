@@ -8,20 +8,14 @@ import backend
 import datetime
 import argparse
 import platform
+import defaults
 from subprocess import call as subcall
 
 
 default_drive_path = os.path.expanduser('~')
 
-# if arguments.production is 'production':
-#     production = True
-# else:
-
 # create an instance of the app
 app = Flask(__name__)
-
-# make_database.run(base)
-
 
 @app.before_request
 def _db_connect():
@@ -32,13 +26,6 @@ def _db_connect():
 def _db_close(exc):
     if not db.is_closed():
         db.close()
-
-
-# begin watching folders for new files
-
-# load recurring scripts already programmed into the system
-
-# the main page loads to a list of the experiments
 
 
 @app.route("/")
@@ -64,7 +51,8 @@ def recurring_scripts():
     scripts = Scripts.select()
     filt_scripts = list(filter(lambda s: os.path.isfile(s.path), scripts))
 
-    kwargs = {'scripts': filt_scripts, 'main': False, 'reveal_modal': True}
+    kwargs = {'scripts': filt_scripts, 'main': False, 'reveal_modal': True,
+              'script_page': True}
     return render_template('recurring_scripts.html', **kwargs)
 
 
@@ -79,7 +67,6 @@ def add_scripts():
             fi = os.path.basename(kwargs['path'])
             kwargs['filename'] = fi
             Scripts.create(**kwargs)
-            # base.add_recurring_script(**kwargs)  # to database
             backend.add_recurring_script(kwargs['path'],
                                          kwargs['runtime_interval'])
         else:
@@ -152,23 +139,68 @@ def change_setting(s_name=None):
 
 @app.route('/add_watched_folder', methods=['get', 'POST'])
 def main_add_watched_folder():
-    path = request.form['folderpath']
-    interval = float(request.form['timeInterval'])
-    experiment = request.form['expname']
-    root_dir = Settings.get(Settings.key == 'backup_location').value
-    # there are 3 keys
-    file_extensions = (len(list(request.form.keys())) - 3)/2
+    '''Grabs all the variables from form request, and adds them to the
+    database'''
 
-    dtypes = ['dtype' + str(num) for num in range(file_extensions)]
-    extensions = ['extension' + str(num) for num in range(file_extensions)]
-    dtype_vals = [request.form[t] for t in dtypes]
-    extension_vals = [request.form[t] for t in extensions]
-    exp = Experiment.create(date_begin=datetime.datetime.now(), date_end=(datetime.datetime.now() + datetime.timedelta(days=365)), file_filter=','.join(dtypes), name=experiment, ordering='backup_location,experiment,date,file_type', scripts_exist=False)
-    wfol = WatchedFolder.create(path=path, experiment_id=exp.id, check_interval=interval, preserve_folder_structure=False)
-    ExperimentScripts.create(file_path=extension_vals[0], experiment_id=exp.id, save_raw_data=True, save_processed_data=False, file_filter=dtype_vals[0], watched_folder_id=wfol.id)
-    # base.add_experiment(experiment, ','.join(dtype_vals), path, interval)
+
+    # Three vars from the form
+    path = request.form['folderpath']
+    strInterval = request.form['timeInterval']
+    interval = float(strInterval) if strInterval else defaults.check_folder_interval
+    experiment = request.form['expname']
+
+    # check if path exists
+    if not os.path.exists(path):
+        raise OSError('Path does not exist')
+        # the following line may not be needed
+        return False
+
+    # we grab this value from the db so that the backend doesn't have
+    # access to the db
+    root_dir = Settings.get(Settings.key == 'backup_location').value
+
+    # there are 3 keys other than the file extensions
+    file_extensions = (len(list(request.form.keys())) - 3)//2
+    if file_extensions <= 0:
+        print('There are no file extensions, grab everything')
+        dtypes = list()
+        dtype_vals = list()
+    else:
+        # construct form key
+        dtypes = ['dtype' + str(num) for num in range(file_extensions)]
+        extensions = ['extension' + str(num) for num in range(file_extensions)]
+        dtype_vals = [request.form[t] for t in dtypes]
+        extension_vals = [request.form[t] for t in extensions]
+
+    exp = Experiment.create(date_begin=datetime.datetime.now(),
+            date_end=(datetime.datetime.now() + datetime.timedelta(days=365)),
+            file_filter=','.join(dtypes), name=experiment,
+            ordering='backup_location,experiment,date,file_type',
+            scripts_exist=False)
+    wfol = WatchedFolder.create(path=path, experiment_id=exp.id,
+             check_interval=interval, preserve_folder_structure=False)
+
+    # TODO: add all scripts to each watched folder
+    exp_scripts_args = dict(experiment_id=exp.id, save_raw_data=True,
+            save_processed_data=False,
+            watched_folder_id=wfol.id)
+    if file_extensions > 0:
+        exp_scripts_args['file_filter'] = dtype_vals[0]
+        exp_scripts_args['file_path'] = extension_vals[0]
+    ExperimentScripts.create(**exp_scripts_args)
     backend.add_watched_folder(path, interval,
                                experiment, root_dir, exp.ordering.split(','), wfol.id)
+    return redirect('/')
+
+
+@app.route('/delete_folder', methods=['POST'])
+def delete_folder():
+    folder_id = request.form['id']
+    folders = list(WatchedFolder.select().where(WatchedFolder.experiment_id == int(folder_id)))
+    WatchedFolder.delete().where(WatchedFolder.experiment_id == int(folder_id))
+    for path in folders:
+        backend.remove_folder(path.path)
+    print('Deleted')
     return redirect('/')
 
 
@@ -194,7 +226,7 @@ def send_pic(fid=None, index=None):
 
 
 def start_watching_folders():
-
+    '''On startup, select all watched folders and begin watching them'''
     # get data backup path
     try:
         backend.set_up_folders(WatchedFolder.select(),
@@ -213,6 +245,9 @@ def start_watching_folders():
 
 
 if __name__ == "__main__":
+    # begin watching folders for new files
+    # load recurring scripts already programmed into the system
+    # the main page loads to a list of the experiments
     parser = argparse.ArgumentParser()
     parser.add_argument('production', nargs='?')
     arguments = parser.parse_args()

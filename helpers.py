@@ -90,7 +90,8 @@ def get_dirs_and_files_in_path(path):
 
     elif os.path.exists(path):
         r = os.listdir(path)
-        f = map(lambda a: os.path.join(path, a), r)
+        # 2x acccess means I have to remove the generator
+        f = [os.path.join(path, a) for a in r]
         dirs = filter(isdir, f)
         files = filter(not_isdir, f)
 
@@ -99,7 +100,8 @@ def get_dirs_and_files_in_path(path):
             head, tail = os.path.split(path)
             r = os.listdir(head)
             filtered_everything = filter(lambda a: a.startswith(tail), r)
-            filtered_everything = map(lambda a: os.path.join(head, a), filtered_everything)
+            # because this was accesssed twice, I needed to remove the generator
+            filtered_everything = [os.path.join(head, a) for a in filtered_everything]
             dirs = filter(isdir, filtered_everything)
             files = filter(not_isdir, filtered_everything)
 
@@ -107,4 +109,6 @@ def get_dirs_and_files_in_path(path):
             print('{0} doesn\'t even exist you stupid'.format(head))
             return None
 
-    return (toolz.take(100, dirs), toolz.take(100, files))
+    result = (sorted(list(toolz.take(100, dirs))),
+              sorted(list(toolz.take(100, files))))
+    return result

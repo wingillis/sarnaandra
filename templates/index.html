@@ -53,7 +53,13 @@
                     {% endif %}
                     {% if reveal_modal %}
                     <br>
-                    <a href="#" data-reveal-id="myModal" class="button">Add folder/script/experiment</a>
+                    <a href="#" data-reveal-id="myModal" class="button">
+                      {% if main %}
+                        Add experiment watch folder
+                      {% elif script_page %}
+                        Add script
+                      {% endif %}
+                      </a>
                     {% endif %}
                 </div>
             </div>
