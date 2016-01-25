@@ -2,11 +2,11 @@ from flask import Flask, json, url_for, render_template
 import sys
 from webbrowser import open_new_tab
 
-app = Flask(__name__, static_folder='static')
+app = Flask(__name__, static_url_path='')
 
 @app.route('/')
 def main():
-    return render_template('index.html')
+    return app.send_static_file('index.html')
 
 
 if __name__ == "__main__":

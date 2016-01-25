@@ -1,8 +1,20 @@
-//output:index.html
+//output:../static/index.html
 <DOCTYPE html>
 html
   head
     include ./head.jade
-  body
-    script(type="text/javascript") setTimeout(function(){console.log('reload');location.reload();}, 60*15*1000);
-    
+    link(rel="stylesheet", href="static/style.css")
+  body#app
+    include ./navbar.jade
+    .row
+      .columns.medium-3.button(style='margin: 5px;') 
+        div New Experiment
+      .columns.medium-6
+        h1.text-center Experiments
+    .row
+      div(v-if="empty")
+        p Sorry, but there have been no produced Experiments. Please make one to start the process.
+      .columns.medium-12(v-else, v-for="(index, exp) in experiments")
+        p This is so cool {{index}}
+
+    script(type="text/javascript", src="app.js")

@@ -5,6 +5,9 @@
   "license": "MIT",
   "devDependencies": {
     "browserify": "^13.0.0",
+    "grunt": "^0.4.5",
+    "grunt-browserify": "^4.0.1",
+    "grunt-contrib-watch": "^0.6.1",
     "superagent": "^1.7.1",
     "vue": "^1.0.15"
   }
