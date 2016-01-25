@@ -1,0 +1,11 @@
+{
+  "name": "sarnaandra",
+  "version": "0.0.1",
+  "Author": "Winthrop Gillis <win.gillis@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "browserify": "^13.0.0",
+    "superagent": "^1.7.1",
+    "vue": "^1.0.15"
+  }
+}
