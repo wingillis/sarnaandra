@@ -3,7 +3,7 @@ import sys
 from app import app
 from webbrowser import open_new_tab
 from api import api
-from models import create_tables
+from models import *
 
 app.register_blueprint(api, url_prefix='/api')
 
@@ -11,6 +11,10 @@ app.register_blueprint(api, url_prefix='/api')
 def main():
     return app.send_static_file('index.html')
 
+@app.route('/exp/<name>')
+def experiment_page(name=None):
+    exp = Experiment.select().where(Experiment.id==name)
+    return 'Nothing'
 
 if __name__ == "__main__":
     create_tables()

@@ -24,7 +24,9 @@ def experiments():
     if request.args.get('all'):
         with opendb():
             vals = [exp for exp in Experiment.select()]
-        vals = [dict(name=v.name, description=v.description, tags=v.tags, id=v.id) for v in vals]
+        vals = [dict(name=v.name,
+        description=v.description, tags=v.tags,
+        id=v.id) for v in vals]
         return jsonify(dict(res=vals))
     else:
         return Response(status=404)

@@ -35,7 +35,7 @@
       <div v-else v-for="(index, exp) in experiments" class="columns medium-3">
         <div>Name: {{exp.name}}</div>
         <div>Description: {{exp.description}}</div>
-        <div>Id: {{exp.id}}</div><br>
+        <div>Id: {{exp.id}}</div><a href="/exp/{{exp.id}}"></a>
       </div>
     </div>
     <div id="newExpModal" data-reveal class="small reveal">
