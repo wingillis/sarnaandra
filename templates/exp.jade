@@ -1,0 +1,13 @@
+//output:exp.html
+doctype html
+html
+  head
+    include ./head.jade
+  body#app
+    include ./navbar.jade
+    .row
+      .columns.medium-12
+        h1 {{experiment}}
+    {{varfor}}
+    
+    script(src='../exp.js')

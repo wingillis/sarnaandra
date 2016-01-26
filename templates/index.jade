@@ -3,7 +3,6 @@ doctype html
 html
   head
     include ./head.jade
-    link(rel="stylesheet", href="static/style.css")
   body#app
     include ./navbar.jade
     .row
@@ -18,7 +17,9 @@ html
         div Name: {{exp.name}}
         div Description: {{exp.description}}
         div Id: {{exp.id}}
-        a(href="/exp/{{exp.id}}")
+        a(href="/exp/{{exp.id}}") Go
+        br
+        br
         
     .small.reveal#newExpModal(data-reveal)
       h3 Name:

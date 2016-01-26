@@ -1,13 +1,14 @@
 module.exports = function(grunt) {
   grunt.initConfig({
     watch: {
-      files: 'app-precompiled.js',
+      files: ['*.js'],
       tasks: 'browserify'
     },
     browserify: {
       dist: {
         files: {
-        'static/app.js': ['app-precompiled.js']
+        'static/app.js': ['app-precompiled.js'],
+        'static/exp.js': ['exp-precompiled.js']
         }
       }
     }

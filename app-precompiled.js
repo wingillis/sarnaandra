@@ -23,7 +23,7 @@ var app = new Vue({
         // console.log(ctx.experiments);
         ctx.empty = false;
       });
-      // console.log('Sent experiment modal');
+
     }
   }
 });
