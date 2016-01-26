@@ -13,10 +13,10 @@ app.register_blueprint(api, url_prefix='/api')
 def main():
     return app.send_static_file('index.html')
 
-@app.route('/exp/<name>')
-def experiment_page(name=None):
-    exp = Experiment.get(Experiment.id==name)
-    return render_template('exp.html', experiment=exp.name)
+# @app.route('/exp/<name>')
+# def experiment_page(name=None):
+#     exp = Experiment.get(Experiment.id==name)
+#     return render_template('exp.html', experiment=exp.name)
 
 if __name__ == "__main__":
     create_tables()

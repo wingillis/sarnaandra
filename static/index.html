@@ -9,43 +9,19 @@
     <title>Sarnaandra</title>
     <script type="text/javascript">setTimeout(function(){console.log('reload');location.reload();}, 60*15*1000);</script>
   </head>
-  <body id="app">
-    <div class="top-bar">
-      <div class="top-bar-left">
-        <ul data-dropdown-menu class="dropdown menu">
-          <li class="menu-text">Sarnaandra</li>
-          <li> <a>Main</a></li>
-          <li> <a>Settings</a></li>
-          <li> <a>About</a></li>
-        </ul>
+  <body>
+    <div id="app">
+      <div class="top-bar">
+        <div class="top-bar-left">
+          <ul data-dropdown-menu class="dropdown menu">
+            <li class="menu-text">Sarnaandra</li>
+            <li> <a>Main</a></li>
+            <li> <a>Settings</a></li>
+            <li> <a>About</a></li>
+          </ul>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div style="margin: 5px;" data-open="newExpModal" class="columns medium-3 small-3 button"> 
-        <div>New Experiment</div>
-      </div>
-      <div class="columns medium-6">
-        <h1 class="text-center">Experiments</h1>
-      </div>
-    </div>
-    <div class="row">
-      <div v-if="empty" class="columns medium-12">
-        <p>Sorry, but there have been no produced Experiments. Please make one to start the process.</p>
-      </div>
-      <div v-else v-for="(index, exp) in experiments" class="columns medium-3">
-        <div>Name: {{exp.name}}</div>
-        <div>Description: {{exp.description}}</div>
-        <div>Id: {{exp.id}}</div><a href="/exp/{{exp.id}}">Go</a><br><br>
-      </div>
-    </div>
-    <div id="newExpModal" data-reveal class="small reveal">
-      <h3>Name:</h3>
-      <input type="text" v-model="api.name">
-      <h3>Tags:</h3>
-      <input type="text" placeholder="comma separated words" v-model="api.tags">
-      <h3>Description:</h3>
-      <textarea v-model="api.description"></textarea>
-      <input type="submit" value="submit" @click="addExp" data-close class="button">
+      <router-view></router-view>
     </div>
     <script type="text/javascript" src="app.js"></script>
   </body>

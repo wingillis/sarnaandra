@@ -1,42 +1,39 @@
 $(document).foundation();
 
 var Vue = require('vue');
+var VueRouter = require('vue-router');
 var request = require('superagent');
+var Main = require('./templates/index.vue');
 
-var data = {
-  experiments:[],
-  empty: true,
-  api: {}
-};
+Vue.use(VueRouter);
 
-var app = new Vue({
-  el:'#app',
-  data: data,
-  methods: {
-    addExp: function() {
-      // console.log(this.api.name);
-      // console.log(this.api.description);
-      var ctx = this;
-      request.post('/api/addExp').send(this.api)
-      .end(function(err, res){
-        ctx.experiments.push(res.body);
-        // console.log(ctx.experiments);
-        ctx.empty = false;
-      });
+var App = Vue.extend({});
 
+var router = new VueRouter();
+
+router.map({
+  '/': {
+    component: Main
+  },
+  '/exp/:expid': {
+    component: {
+      template: '<p> This is the id {{$route.params.expid}}</p>'
     }
   }
 });
 
-function getEpxeriments() {
-  request.get('/api/exp')
-    .query('all=true').end(function(err, res) {
-      if (res.body.res.length > 0) {
-        data.empty = false;
-      }
-      data.experiments = res.body.res;
-      // console.log(res.body.res);
-    });
-}
 
-getEpxeriments();
+var addExp = function() {
+  // console.log(this.api.name);
+  // console.log(this.api.description);
+  var ctx = this;
+  request.post('/api/addExp').send(this.api)
+  .end(function(err, res){
+    ctx.experiments.push(res.body);
+    // console.log(ctx.experiments);
+    ctx.empty = false;
+  });
+};
+
+
+router.start(App, '#app');
