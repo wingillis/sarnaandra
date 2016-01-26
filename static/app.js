@@ -1,20 +1,31 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+$(document).foundation();
+
 var Vue = require('vue');
 var request = require('superagent');
 
 var data = {
-  experiments:['wowee', 'wwww'],
-  empty: false
+  experiments:[],
+  empty: true,
+  api: {}
 };
 
 var app = new Vue({
   el:'#app',
-  data: data
+  data: data,
+  methods: {
+    addExp: function() {
+      // console.log(this.api.name);
+      // console.log(this.api.description);
+      request.post('/api/addExp').send(this.api).end();
+      console.log('Sent experiment modal');
+    }
+  }
 });
 
 console.log('New vue instance formed');
 
-app.start();
+// app.start();
 
 },{"superagent":5,"vue":6}],2:[function(require,module,exports){
 

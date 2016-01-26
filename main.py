@@ -1,8 +1,10 @@
 from flask import Flask, json, url_for, render_template
 import sys
 from webbrowser import open_new_tab
+from api import api
 
 app = Flask(__name__, static_url_path='')
+app.register_blueprint(api, url_prefix='/api')
 
 @app.route('/')
 def main():

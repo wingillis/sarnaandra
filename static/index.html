@@ -1,21 +1,18 @@
-<DOCTYPE html>
+<!DOCTYPE html>
 <html>
   <head>
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation-flex.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation-flex.min.css">
     <title>Sarnaandra</title>
-    <script type="text/javascript">
-      setTimeout(function(){console.log('reload');location.reload();}, 60*15*1000);
-      $(document).foundation();
-    </script>
-    <link rel="stylesheet" href="static/style.css"/>
+    <script type="text/javascript">setTimeout(function(){console.log('reload');location.reload();}, 60*15*1000);</script>
+    <link rel="stylesheet" href="static/style.css">
   </head>
   <body id="app">
     <div class="top-bar">
       <div class="top-bar-left">
-        <ul data-dropdown-menu="data-dropdown-menu" class="dropdown menu">
+        <ul data-dropdown-menu class="dropdown menu">
           <li class="menu-text">Sarnaandra</li>
           <li> <a>Main</a></li>
           <li> <a>Settings</a></li>
@@ -24,7 +21,7 @@
       </div>
     </div>
     <div class="row">
-      <div style="margin: 5px;" class="columns medium-3 button"> 
+      <div style="margin: 5px;" data-open="newExpModal" class="columns medium-3 small-3 button"> 
         <div>New Experiment</div>
       </div>
       <div class="columns medium-6">
@@ -32,12 +29,21 @@
       </div>
     </div>
     <div class="row">
-      <div v-if="empty">
+      <div v-if="empty" class="columns medium-12">
         <p>Sorry, but there have been no produced Experiments. Please make one to start the process.</p>
       </div>
-      <div v-else="v-else" v-for="(index, exp) in experiments" class="columns medium-12">
+      <div v-else v-for="(index, exp) in experiments" class="columns medium-12">
         <p>This is so cool {{index}}</p>
       </div>
+    </div>
+    <div id="newExpModal" data-reveal class="small reveal">
+      <h3>Name:</h3>
+      <input type="text" v-model="api.name">
+      <h3>Tags:</h3>
+      <input type="text" placeholder="comma separated words" v-model="api.tags">
+      <h3>Description:</h3>
+      <textarea v-model="api.description"></textarea>
+      <input type="submit" value="submit" @click="addExp" data-close class="button">
     </div>
     <script type="text/javascript" src="app.js"></script>
   </body>
