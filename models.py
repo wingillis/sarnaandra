@@ -1,20 +1,11 @@
-import os
-from manager import get_path
 from peewee import *
-from contextlib import contextmanager
-
-db = SqliteDatabase(get_path())
+from app import db
 
 # from the peewee docs
 # Because we have not specified a primary key, peewee will
 # automatically add an auto-incrementing integer primary key
 # field named id.
 
-@contextmanager
-def opendb():
-    db.connect()
-    yield
-    db.close()
 
 class Base(Model):
     class Meta:
@@ -25,10 +16,10 @@ class Experiment(Base):
     # all the watched folders with it
     name = CharField()
     date_begin = DateTimeField()
-    date_end = DateTimeField()
-    tags = TextField()
-    starred = BooleanField()
-    description = TextField()
+    date_end = DateTimeField(null=True)
+    tags = TextField(null=True)
+    starred = BooleanField(default=False)
+    description = TextField(null=True)
 
 
 class Folder(Base):
@@ -43,3 +34,7 @@ class Settings(Base):
     value = TextField()
     # suggested values include: backup path
     # folder structure
+
+
+def create_tables():
+    db.create_tables([Experiment, Folder, Settings], safe=True)

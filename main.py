@@ -1,9 +1,10 @@
-from flask import Flask, json, url_for, render_template
+from flask import json, url_for, render_template
 import sys
+from app import app
 from webbrowser import open_new_tab
 from api import api
+from models import create_tables
 
-app = Flask(__name__, static_url_path='')
 app.register_blueprint(api, url_prefix='/api')
 
 @app.route('/')
@@ -12,6 +13,7 @@ def main():
 
 
 if __name__ == "__main__":
+    create_tables()
     if len(sys.argv) > 1:
         print('Opening a new tab to server')
         open_new_tab('http://localhost:5000')

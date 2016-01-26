@@ -16,12 +16,27 @@ var app = new Vue({
     addExp: function() {
       // console.log(this.api.name);
       // console.log(this.api.description);
-      request.post('/api/addExp').send(this.api).end();
-      console.log('Sent experiment modal');
+      var ctx = this;
+      request.post('/api/addExp').send(this.api)
+      .end(function(err, res){
+        ctx.experiments.push(res.body);
+        // console.log(ctx.experiments);
+        ctx.empty = false;
+      });
+      // console.log('Sent experiment modal');
     }
   }
 });
 
-console.log('New vue instance formed');
+function getEpxeriments() {
+  request.get('/api/exp')
+    .query('all=true').end(function(err, res) {
+      if (res.body.res.length > 0) {
+        data.empty = false;
+      }
+      data.experiments = res.body.res;
+      // console.log(res.body.res);
+    });
+}
 
-// app.start();
+getEpxeriments();

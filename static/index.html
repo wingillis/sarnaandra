@@ -32,8 +32,10 @@
       <div v-if="empty" class="columns medium-12">
         <p>Sorry, but there have been no produced Experiments. Please make one to start the process.</p>
       </div>
-      <div v-else v-for="(index, exp) in experiments" class="columns medium-12">
-        <p>This is so cool {{index}}</p>
+      <div v-else v-for="(index, exp) in experiments" class="columns medium-3">
+        <div>Name: {{exp.name}}</div>
+        <div>Description: {{exp.description}}</div>
+        <div>Id: {{exp.id}}</div><br>
       </div>
     </div>
     <div id="newExpModal" data-reveal class="small reveal">

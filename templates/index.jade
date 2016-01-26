@@ -14,8 +14,11 @@ html
     .row
       .columns.medium-12(v-if="empty")
         p Sorry, but there have been no produced Experiments. Please make one to start the process.
-      .columns.medium-12(v-else, v-for="(index, exp) in experiments")
-        p This is so cool {{index}}
+      .columns.medium-3(v-else, v-for="(index, exp) in experiments")
+        div Name: {{exp.name}}
+        div Description: {{exp.description}}
+        div Id: {{exp.id}}
+        br
         
     .small.reveal#newExpModal(data-reveal)
       h3 Name:
